@@ -1,0 +1,104 @@
+server:
+  port: 8090
+  servlet:
+    context-path: /app
+
+spring:
+  #mysql配置信息
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource   #配置当前要使用的数据源的操作类型那个
+    driver-class-name: org.gjt.mm.mysql.Driver       #配置MySQL的驱动程序类
+    url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: root
+    password: root
+    filters: stat,wall,log4j     #druid监控配置
+    dbcp2:
+      min-idle: 5         #数据库连接池的最小维持连接数
+      initial-size: 5     #初始化提供的连接数
+      max-total: 5          #最大的连接数
+      max-wait-millis: 200        #等待连接获取的最大超时时间
+#    driver-class-name: com.mysql.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+#    #url: jdbc:mysql://192.168.0.101:3306/test?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+#    username: root
+#    password: root
+
+  #redis配置信息
+  redis:
+    #数据库
+    database: 0
+    #单机模式
+    #redis 服务器地址
+    host: 192.168.236.144
+    #redis端口
+    port: 6379
+    #nodes: 192.168.236.143:6379, 192.168.236.143:6380
+    #redis 密码
+    #password:
+    #客户端超时时间单位是毫秒 默认是2000
+    timeout: 5000
+    #最大空闲数
+    maxIdle: 200
+    #连接池的最大数据库连接数
+    maxActive: 1000
+    #控制一个pool可分配多少个jedis实例,用来替换上面的maxActive
+    maxTotal: 1000
+    #最大建立连接等待时间。如果超过此时间将接到异常
+    maxWaitMillis: 100
+    #连接的最小空闲时间
+    minEvictableIdleTimeMillis: 864000000
+    #每次释放连接的最大数目
+    numTestsPerEvictionRun: 10
+    #逐出扫描的时间间隔(毫秒) 如果为负数,则不运行逐出线程
+    timeBetweenEvictionRunsMillis: 300000
+    #是否在从池中取出连接前进行检验,如果检验失败,则从池中去除连接并尝试取出另一个
+    testOnBorrow: true
+    #在空闲时检查有效性
+    testWhileIdle: false
+      #哨兵模式
+      #    sentinel:
+      #      master: mymaster #主服务器所在集群名称
+      #      nodes: 192.168.236.143:26381,192.168.236.143:26382,192.168.236.143:26383
+    #password: 123456  如果有密码则设置密码
+    #集群模式
+  #    cluster:
+  #      nodes: 192.168.236.140:8001,192.168.236.140:8002,192.168.236.141:8003,192.168.236.141:8004,192.168.236.142:8005,192.168.236.142:8006
+  #    lettuce:
+  #      pool:
+  #        max-idle: 10
+  #        max-active: 50
+  #        min-idle: 5
+  #        max-wait: 10000ms
+
+#showSql
+#logging.level.org.springframework: DEBUG
+logging.level.com.wya.web.mapper: DEBUG
+
+#https://www.cnblogs.com/gxyandwmm/p/9713672.html
+#https://www.cnblogs.com/charlypage/p/11220755.html
+#springboot整合mybatis的配置
+#指定mybatis的配置文件(将mybatis配置文件复到resources目录下mybatis中根据自己的需求在mybatis配置文件中添加自己的配置)
+mybatis.config-location: classpath:mybatis/mybatis-config.xml
+mybatis.mapper-locations: classpath:mapper/*Mapper.xml
+#mybatis.type-aliases-package: com.wya.web.model
+
+#禁止thymeleaf缓存（建议：开发环境设置为false，生成环境设置为true）
+#spring.thymeleaf.cache=false
+
+#pagehelper分页插件配置 以下属性不加也可以实现分页功能
+pagehelper.helperDialect: mysql
+pagehelper.reasonable: true
+pagehelper.supportMethodsArguments: true
+pagehelper.params: count=countSql
+
+#config shop
+shop-entity:
+  configs:
+    - shopId: 1
+      env: test
+      phoneNo: 1234567
+      address: 江西省-抚州市
+    - shopId: 2
+      env: test
+      phoneNo: 1234567
+      address: 江西省-赣州市
