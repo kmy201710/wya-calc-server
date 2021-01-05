@@ -9,7 +9,7 @@ public interface CalcService extends BaseService<Calc> {
 
     List<Calc> getNext(int size, String tag);
 
-    List<Calc> generator(String tag);
+    List<Calc> generator(int size, String tag);
 
     void compute(Calc entity);
 

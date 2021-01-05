@@ -82,7 +82,9 @@ public class WebAppTest {
 //        strList.add("双方都4");
 //        strList.add("双方都5");
 //        strList.add("双方都6");
-        for (int i = 0; i < 1000; i++) {
+        int num = 2;
+        int size = 100;
+        for (int i = 0; i < size; i++) {
             strList.add("" + i);
         }
         Set<String> set = new HashSet<String>();
@@ -90,7 +92,7 @@ public class WebAppTest {
         String[] arr = new String[set.size()];
         arr = set.toArray(arr);
 
-        String redisKey = "test:random:nums-3";
+        String redisKey = "calc:random:nums-" + num;
         long ss = setOpt.add(redisKey, arr);
         System.out.println(ss);
         List<String> lss = setOpt.randomMembers(redisKey, 5); //随机返回5个，可以重复

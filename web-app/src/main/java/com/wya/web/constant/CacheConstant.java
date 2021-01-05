@@ -2,8 +2,8 @@ package com.wya.web.constant;
 
 public class CacheConstant {
 
-    // 600秒(10分钟)
-    public final static long CACHE_TIME_DEFAULT = 30;// 30
+    // 1800秒(30分钟)
+    public final static long CACHE_TIME_DEFAULT = 60 * 30;// 60秒=1分钟
     // 30秒
     public final static long CACHE_TIME_SHORT = 30;
     // 3分钟

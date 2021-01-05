@@ -12,13 +12,14 @@ public class User extends BaseModel {
 	// 商户ID
 	private Long shopId;
 
-	// 角色：管理员、客户、教师、学生
-	private String role;
-	// 角色：管理员、客户、教师、学生
-	private String verified;
+	// 用户角色：管理员、小学生、中学生、大学生、自主创业、自由职业、无业
+	private Integer roleId;
 
-	// 用户名
+	// 用户名称
 	private String name;
+
+	// 手机号
+	private String phoneNo;
 
 	// 密码
 	private String password;
@@ -32,12 +33,9 @@ public class User extends BaseModel {
 	// 生日
 	private String birthday;
 
-	// 电话号码
-	private String phoneNo;
-
-	// 身份证号
-	private String certNo;
-
 	// 算术等级
 	private String lvCalculation;
+
+	// 实名认证
+	private String isVerified;
 }

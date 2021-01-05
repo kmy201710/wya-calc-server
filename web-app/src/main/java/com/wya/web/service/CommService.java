@@ -9,14 +9,12 @@ import com.wya.web.utils.TokenUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import javax.sql.DataSource;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -30,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 public class CommService implements ApplicationRunner {
     private static Logger logger = LoggerFactory.getLogger(CommService.class);
 
-//    @Resource(name = "dynamicDataSource")
+    //    @Resource(name = "dynamicDataSource")
     @Resource
     private DynamicDataSource dynamicDataSource;
     @Resource
@@ -61,7 +59,12 @@ public class CommService implements ApplicationRunner {
     }
 
     public void generator() {
-        calcService.getNext(1, "0");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                calcService.generator(3, "0");
+            }
+        }).start();
     }
 
     public static <T extends BaseModel> void initCreate(T t) {

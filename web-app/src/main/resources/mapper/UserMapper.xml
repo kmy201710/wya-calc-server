@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.wya.web.mapper.UserMapper">
-    <resultMap type="com.wya.web.model.User" id="BaseResultMap">
+    <resultMap type="com.wya.web.model.User" id="BaseResultMap" >
         <result column="id" property="id" jdbcType="BIGINT" />
         <result column="shop_id" property="shopId" jdbcType="BIGINT" />
-        <result column="role" property="role" jdbcType="VARCHAR" />
+        <result column="role_id" property="roleId" jdbcType="INTEGER" />
         <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="phone_no" property="phoneNo" jdbcType="VARCHAR" />
         <result column="password" property="password" jdbcType="VARCHAR" />
         <result column="avatar" property="avatar" jdbcType="VARCHAR" />
         <result column="sex" property="sex" jdbcType="VARCHAR" />
         <result column="birthday" property="birthday" jdbcType="VARCHAR" />
-        <result column="phone_no" property="phoneNo" jdbcType="VARCHAR" />
-        <result column="cert_no" property="certNo" jdbcType="VARCHAR" />
         <result column="lv_calculation" property="lvCalculation" jdbcType="VARCHAR" />
+        <result column="is_verified" property="isVerified" jdbcType="VARCHAR" />
         <result column="state" property="state" jdbcType="VARCHAR" />
         <result column="remark" property="remark" jdbcType="VARCHAR" />
         <result column="short_date" property="shortDate" jdbcType="VARCHAR" />
@@ -26,7 +26,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        `id`, `shop_id`, `role`, `name`, `password`, `avatar`, `sex`, `birthday`, `phone_no`, `cert_no`, `lv_calculation`,
+        `id`, `shop_id`, `role_id`, `name`, `phone_no`, `password`, `avatar`, `sex`, `birthday`, `lv_calculation`, `is_verified`,
         `state`, `remark`, `short_date`, `create_time`, `create_user`, `update_time`, `update_user`,
         `version`, `is_enable`
     </sql>
@@ -39,11 +39,11 @@
             <if test="id != null">
                 AND t.id = #{id}
             </if>
-            <if test="shopId != null">
-                AND t.shop_id = #{shopId}
-            </if>
-            <if test="role != null and role != ''">
-                AND t.role = #{role}
+<!--            <if test="shopId != null">-->
+<!--                AND t.shop_id = #{shopId}-->
+<!--            </if>-->
+            <if test="roleId != null and roleId != ''">
+                AND t.role_id = #{roleId}
             </if>
             <if test="name != null and name != ''">
                 AND t.name = #{name}
@@ -75,15 +75,15 @@
         (
         #{id},
         #{shopId},
-        #{role},
+        #{roleId},
         #{name},
+        #{phoneNo},
         #{password},
         #{avatar},
         #{sex},
         #{birthday},
-        #{phoneNo},
-        #{certNo},
         #{lvCalculation},
+        #{isVerified},
         #{state},
         #{remark},
         #{shortDate},
@@ -103,15 +103,15 @@
             (
             #{item.id},
             #{item.shopId},
-            #{item.role},
+            #{item.roleId},
             #{item.name},
+            #{item.phoneNo},
             #{item.password},
             #{item.avatar},
             #{item.sex},
             #{item.birthday},
-            #{item.phoneNo},
-            #{item.certNo},
             #{item.lvCalculation},
+            #{item.isVerified},
             #{item.state},
             #{item.remark},
             #{item.shortDate},

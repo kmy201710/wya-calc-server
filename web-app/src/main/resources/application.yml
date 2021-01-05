@@ -8,7 +8,8 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource   #配置当前要使用的数据源的操作类型那个
     driver-class-name: org.gjt.mm.mysql.Driver       #配置MySQL的驱动程序类
-    url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf8&useSSL=false
+    url: jdbc:mysql://localhost:3306/wya_calc?useUnicode=true&characterEncoding=utf8&useSSL=false
+#    url: jdbc:mysql://8.136.103.138:3306/wya_calc?useUnicode=true&characterEncoding=utf8&useSSL=false
     username: root
     password: root
     filters: stat,wall,log4j     #druid监控配置
@@ -29,7 +30,7 @@ spring:
     database: 0
     #单机模式
     #redis 服务器地址
-    host: 192.168.236.144
+    host: 8.136.103.138
     #redis端口
     port: 6379
     #nodes: 192.168.236.143:6379, 192.168.236.143:6380

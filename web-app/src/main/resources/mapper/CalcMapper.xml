@@ -34,9 +34,9 @@
             <if test="id != null">
                 AND t.id = #{id}
             </if>
-            <if test="shopId != null">
-                AND t.shop_id = #{shopId}
-            </if>
+<!--            <if test="shopId != null">-->
+<!--                AND t.shop_id = #{shopId}-->
+<!--            </if>-->
             AND t.`is_enable` = 1
         </trim>
         ORDER BY t.`id` DESC

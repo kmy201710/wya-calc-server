@@ -111,12 +111,6 @@ public class LoginController extends BaseController {
                               @RequestParam(value = "shop", required = false) String shopId) {
         logger.info("===== getList shopId:{}", shopId);
         Map<String, Object> resultMap = new HashMap();
-        if (EmptyUtils.isEmpty(shopId)) {
-            User user = new User();
-            user.setShopId(AppConstant.SHOP_DEFAULT);
-            user.setRole(RoleTagEnum.UNEMPLOYED.tag);
-            resultMap.put("user", user);
-        }
         List marqueeList = new ArrayList();
         marqueeList.add("1***ve 成功邀请 12人, 已获奖金 20元");
         marqueeList.add("2***ve 成功邀请 6人, 已获奖金 10元");
@@ -129,7 +123,8 @@ public class LoginController extends BaseController {
         Map<String, String> map = this.handleData("001", "http://mp-piao-admincp.qunarzz.com/mp_piao_admin_mp_piao_admin/admin/20195/dc11f0bb94057224b104a2017f313e21.jpg_750x200_feee379d.jpg");
         Map<String, String> map1 = this.handleData("002", "http://mp-piao-admincp.qunarzz.com/mp_piao_admin_mp_piao_admin/admin/20195/64beebd2f4e2447db0891e8b890b5a07.png_750x200_ab33275f.png");
         Map<String, String> map2 = this.handleData("003", "http://mp-piao-admincp.qunarzz.com/mp_piao_admin_mp_piao_admin/admin/20195/dc11f0bb94057224b104a2017f313e21.jpg_750x200_feee379d.jpg");
-        Map<String, String> map3 = this.handleData("004", "http://192.168.0.102/image/home/wya.jpg");
+        Map<String, String> map3 = this.handleData("004", "https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=211785943,3610857266&fm=26&gp=0.jpg");
+//        http://blog.sina.cn/dpool/blog/s/blog_4ba91085010094dp.html
         swiperList.add(map);
         swiperList.add(map1);
         swiperList.add(map2);
@@ -139,16 +134,16 @@ public class LoginController extends BaseController {
         List<Map> managerList = new ArrayList<>();
         Long size = redisTemplate.opsForSet().size(CacheConstant.CACHE_KEY_CALC_TYPE_OBJ + AppConstant.N_STR);
         size += redisTemplate.opsForSet().size(CacheConstant.CACHE_KEY_CALC_TYPE_OBJ + AppConstant.Y_STR);
-        Map<String, String> params = this.handleData("http://192.168.0.102/image/home/wya.jpg", "数学表达式(" + size + ")", "/info/calc");
-        Map<String, String> params1 = this.handleData("http://192.168.0.102/image/home/user.png", "用户信息(敬请期待)", "/info/user");
-        Map<String, String> params2 = this.handleData("http://192.168.0.102/image/home/user.png", "活动信息(敬请期待)", "/info/user");
-        Map<String, String> params3 = this.handleData("http://192.168.0.102/image/home/user.png", "任务信息(敬请期待)", "/info/user");
-        Map<String, String> params4 = this.handleData("http://192.168.0.102/image/home/user.png", "商品信息(敬请期待)", "/info/user");
-        Map<String, String> params5 = this.handleData("http://192.168.0.102/image/home/user.png", "麻辣香锅2(2)", "/info/user");
-        Map<String, String> params6 = this.handleData("http://192.168.0.102/image/home/user.png", "麻辣香锅3(3)", "/info/user");
-        Map<String, String> params7 = this.handleData("http://192.168.0.102/image/home/user.png", "油焖大虾4(3)", "/info/user");
-        Map<String, String> params8 = this.handleData("http://192.168.0.102/image/home/user.png", "油焖大虾5(3)", "/info/user");
-        Map<String, String> params9 = this.handleData("http://192.168.0.102/image/home/user.png", "油焖大虾6(3)", "/info/user");
+        Map<String, String> params = this.handleData("/image/home/wya.jpg", "数学表达式(" + size + ")", "/info/calc");
+        Map<String, String> params1 = this.handleData("/image/home/user.png", "动态答题信息(敬请期待)", "/info/userCalc");
+        Map<String, String> params2 = this.handleData("/image/home/user.png", "活动信息(敬请期待)", "/info/user");
+        Map<String, String> params3 = this.handleData("/image/home/user.png", "任务信息(敬请期待)", "/info/user");
+        Map<String, String> params4 = this.handleData("/image/home/user.png", "商品信息(敬请期待)", "/info/user");
+        Map<String, String> params5 = this.handleData("/image/home/user.png", "麻辣香锅2(2)", "/info/user");
+        Map<String, String> params6 = this.handleData("/image/home/user.png", "麻辣香锅3(3)", "/info/user");
+        Map<String, String> params7 = this.handleData("/image/home/user.png", "油焖大虾4(3)", "/info/user");
+        Map<String, String> params8 = this.handleData("/image/home/user.png", "油焖大虾5(3)", "/info/user");
+        Map<String, String> params9 = this.handleData("/image/home/user.png", "油焖大虾6(3)", "/info/user");
         managerList.add(params);
         managerList.add(params1);
         managerList.add(params2);

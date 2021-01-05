@@ -77,7 +77,7 @@ public class RandomUtils {
         if (result == null || result.size() == 0) {
             String[] arr;
             int currentDate = DateUtils.getCurrentDay();
-            int tag = currentDate & 2;
+            int tag = currentDate & 3;
             if (tag == 0) {
                 arr = new String[]{"+", "-"};
             } else {

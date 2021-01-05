@@ -74,9 +74,9 @@ public class CalcController extends BaseController<Calc> {
     }
 
     @RequestMapping(value = "/generator")
-    public ResponseVo generator(@RequestParam long shopId, @RequestParam String tag) {
-        logger.info("===== generator shopId:{}, tag:{}", shopId, tag);
-        List result = calcService.generator(tag);
+    public ResponseVo generator(@RequestParam int size, @RequestParam String tag) {
+        logger.info("===== generator size:{}, tag:{}", size, tag);
+        List result = calcService.generator(size, tag);
         return this.returnSuccess(result);
     }
 }

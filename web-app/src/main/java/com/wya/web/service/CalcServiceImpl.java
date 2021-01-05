@@ -27,7 +27,7 @@ public class CalcServiceImpl extends BaseServiceImpl<Calc> implements CalcServic
     @Resource
     private CalcMapper calcMapper;
 
-    private static long cacheSize = 10L;
+    private static Long cacheSize = 10L;
 
     @Override
     public BaseMapper<Calc> getMapper() {
@@ -42,15 +42,8 @@ public class CalcServiceImpl extends BaseServiceImpl<Calc> implements CalcServic
         Long size1 = redisTemplate.opsForSet().size(CacheConstant.CACHE_KEY_CALC_TYPE_OBJ + tag);
         if (size == incr || incr.compareTo(size1) > 0) {
             System.out.println("size = " + size + " = " + incr + " = " + size1);
-            int currentDate = DateUtils.getCurrentDay();
-            String redisKey = CacheConstant.CACHE_KEY_CALC_GENERATOR + currentDate;
-            Boolean ifAbsent = redisTemplate.opsForValue().setIfAbsent(redisKey, AppConstant.Y_STR);
-            if (!ifAbsent) {
-                return null;
-            }
-            redisTemplate.expire(redisKey, CacheConstant.CACHE_TIME_SHORT, TimeUnit.SECONDS);
             cacheSize += size1;
-            this.generator(tag);
+            this.generator(cacheSize.intValue() & 3 + 2, tag);
         }
         List<String> list = redisTemplate.opsForSet()
                 .randomMembers(CacheConstant.CACHE_KEY_CALC_TYPE_OBJ + tag, size);
@@ -64,15 +57,22 @@ public class CalcServiceImpl extends BaseServiceImpl<Calc> implements CalcServic
     /**
      * 自动生成 100条（加法、减法、乘法、除法）
      * AppConstants.LIST_SIZE = 1000
+     *
      * @param tag 0:简单 1:困难
      * @return
      */
     @Override
-    public List<Calc> generator(String tag) {
-        logger.info("===>> generator tag:{}, cacheSize:{}", tag, cacheSize);
-        int size = 3;
-        String num = RandomUtils.randomList(size, AppConstant.N_STR).get(0);
+    public List<Calc> generator(int size, String tag) {
+        logger.info("===>> generator size:{}, tag:{}, cacheSize:{}", size, tag, cacheSize);
+        int currentDate = DateUtils.getCurrentDay();
+        String redisKey = CacheConstant.CACHE_KEY_CALC_GENERATOR + currentDate;
+        Boolean ifAbsent = redisTemplate.opsForValue().setIfAbsent(redisKey, AppConstant.Y_STR);
+        if (!ifAbsent) {
+            return null;
+        }
+        redisTemplate.expire(redisKey, CacheConstant.CACHE_TIME_SHORT, TimeUnit.SECONDS);
         IncrementUtils.setIncr(CacheConstant.CACHE_KEY_CALC_INCREMENT, AppConstant.Y_STR);
+        String num = AppConstant.N_STR.equals(tag) ? "1" : "2";
         List<Calc> list = new ArrayList<>();
         for (int i = 0; i < cacheSize; i++) {
             List tagList = RandomUtils.randomList(size);

@@ -3,6 +3,7 @@ package com.wya.web.service;
 import com.alibaba.fastjson.JSON;
 import com.wya.pub.BaseMapper;
 import com.wya.pub.BaseServiceImpl;
+import com.wya.pub.enums.RoleTagEnum;
 import com.wya.web.constant.AppConstant;
 import com.wya.web.constant.CacheConstant;
 import com.wya.web.mapper.UserMapper;
@@ -60,11 +61,8 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         if (EmptyUtils.isEmpty(phoneNo)) {
             return null;
         }
-        List<User> list = this.getList(entity);
-        User user;
-        if (!EmptyUtils.isEmpty(list)) {
-            user = list.get(0);
-        } else {
+        User user = this.getByPhoneNo(phoneNo);
+        if (EmptyUtils.isEmpty(user)) {
             user = this.register(entity);
         }
         String token = TokenUtils.token(user.getName(), phoneNo);
@@ -84,10 +82,12 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         if (EmptyUtils.isEmpty(phoneNo) || EmptyUtils.isEmpty(password)) {
             return null;
         }
-        entity.setPassword(MD5Utils.MD(secret_key + password + phoneNo));
-        List<User> list = this.getList(entity);
-        if (!EmptyUtils.isEmpty(list)) {
-            User user = list.get(0);
+        String md = MD5Utils.MD(secret_key + password + phoneNo);
+        User user = this.getByPhoneNo(phoneNo);
+        if (EmptyUtils.isEmpty(user)) {
+            return null;
+        }
+        if (md.equals(user.getPassword())) {
             String token = TokenUtils.token(user.getName(), phoneNo);
             Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("token", token);
@@ -125,34 +125,6 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         return null;
     }
 
-    private User createUser(User entity) {
-        entity.setShopId(AppConstant.SHOP_DEFAULT);
-        entity.setName("小无芽");
-        entity.setAvatar("http://192.168.0.101/image/home/wya.jpg");
-        entity.setSex("");
-        entity.setBirthday("");
-        entity.setCertNo("");
-        entity.setVerified("");
-        entity.setLvCalculation("");
-        CommService.initCreate(entity);
-        return entity;
-    }
-
-    private User register(User entity) {
-        String phoneNo = entity.getPhoneNo();
-        String role = entity.getRole();
-        if (EmptyUtils.isEmpty(phoneNo) || EmptyUtils.isEmpty(role) || Integer.valueOf(role) < 10) {
-            return null;
-        }
-        User user = this.getByPhoneNo(phoneNo);
-        if (EmptyUtils.isEmpty(user)) {
-            entity.setPassword(MD5Utils.MD(secret_key + password_123 + phoneNo));
-            CommService.initCreate(entity);
-            this.insert(entity);
-        }
-        return user;
-    }
-
     @Override
     public User getByPhoneNo(String phoneNo) {
         User entity = new User();
@@ -162,5 +134,31 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             return list.get(0);
         }
         return null;
+    }
+
+    private User register(User entity) {
+        Long shopId = entity.getShopId();
+        int roleId = entity.getRoleId();
+        if (EmptyUtils.isEmpty(shopId)) {
+            entity.setShopId(AppConstant.SHOP_DEFAULT);
+        }
+        if (EmptyUtils.isEmpty(roleId) || Integer.valueOf(roleId) < 10) {
+            entity.setRoleId(RoleTagEnum.NEWCOMER.tag);
+        }
+        String phoneNo = entity.getPhoneNo();
+        User user = this.getByPhoneNo(phoneNo);
+        if (EmptyUtils.isEmpty(user)) {
+            user = this.createUser(entity);
+        }
+        return user;
+    }
+
+    private User createUser(User entity) {
+        entity.setName("小无芽");
+        entity.setPassword(MD5Utils.MD(secret_key + password_123 + entity.getPhoneNo()));
+        entity.setAvatar("/image/home/wya.jpg");
+        CommService.initCreate(entity);
+        this.insert(entity);
+        return entity;
     }
 }
