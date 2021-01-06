@@ -57,10 +57,17 @@ public class CalcController extends BaseController<Calc> {
         return this.returnSuccess(this.getService().get(id));
     }
 
-    @RequestMapping(value = "/getNext", method = RequestMethod.GET)
+    @RequestMapping(value = "/next", method = RequestMethod.GET)
     public ResponseVo getNext(@RequestParam int size, @RequestParam String tag) {
         logger.info("===== getNext size:{}, tag:{}", size, tag);
         return this.returnSuccess(calcService.getNext(size, tag));
+    }
+
+    @RequestMapping(value = "/generator")
+    public ResponseVo generator(@RequestParam int size, @RequestParam String tag) {
+        logger.info("===== generator size:{}, tag:{}", size, tag);
+        List result = calcService.generator(size, tag);
+        return this.returnSuccess(result);
     }
 
     @RequestMapping(value = "/compute", method = RequestMethod.POST)
@@ -70,13 +77,6 @@ public class CalcController extends BaseController<Calc> {
         BeanUtils.copyProperties(vo, calc);
         calcService.compute(calc);
         String result = String.format("本次计算结果: %s, 计算表达式: %s", calc.getCalculations(), calc.getContent());
-        return this.returnSuccess(result);
-    }
-
-    @RequestMapping(value = "/generator")
-    public ResponseVo generator(@RequestParam int size, @RequestParam String tag) {
-        logger.info("===== generator size:{}, tag:{}", size, tag);
-        List result = calcService.generator(size, tag);
         return this.returnSuccess(result);
     }
 }

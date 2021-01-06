@@ -3,7 +3,10 @@ server:
   servlet:
     context-path: /app
 
+# 指定执行环境
 spring:
+  profiles:
+    active:  @profileActive@
   #mysql配置信息
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource   #配置当前要使用的数据源的操作类型那个
@@ -30,6 +33,7 @@ spring:
     database: 0
     #单机模式
     #redis 服务器地址
+#    host: 192.168.236.144
     host: 8.136.103.138
     #redis端口
     port: 6379
@@ -92,14 +96,11 @@ pagehelper.reasonable: true
 pagehelper.supportMethodsArguments: true
 pagehelper.params: count=countSql
 
-#config shop
-shop-entity:
-  configs:
-    - shopId: 1
-      env: test
-      phoneNo: 1234567
-      address: 江西省-抚州市
-    - shopId: 2
-      env: test
-      phoneNo: 1234567
-      address: 江西省-赣州市
+##config shop  dev-1 test-2 prod-3
+#shop-entity:
+#  config:
+#    env: dev
+#    shopId: 10
+#    phoneNo: 1234567
+#    address: 江西省-抚州市
+#    hostUrl: http://8.136.103.138:80

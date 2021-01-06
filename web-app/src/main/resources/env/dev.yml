@@ -1,0 +1,8 @@
+##config shop  dev-1 test-2 prod-3
+shop-entity:
+  config:
+    env: dev
+    shopId: 1
+    phoneNo: 1234567
+    address: 江西省-抚州市
+    hostUrl: http://localhost:8090

@@ -3,6 +3,7 @@ package com.wya.web.service;
 import com.alibaba.fastjson.JSON;
 import com.wya.pub.BaseMapper;
 import com.wya.pub.BaseServiceImpl;
+import com.wya.web.config.properties.ShopEntity;
 import com.wya.web.constant.AppConstant;
 import com.wya.web.constant.CacheConstant;
 import com.wya.web.mapper.CalcMapper;
@@ -27,11 +28,23 @@ public class CalcServiceImpl extends BaseServiceImpl<Calc> implements CalcServic
     @Resource
     private CalcMapper calcMapper;
 
+    @Resource(name = "shopEntity")
+    private ShopEntity basicProperties;
+
     private static Long cacheSize = 10L;
 
     @Override
     public BaseMapper<Calc> getMapper() {
         return calcMapper;
+    }
+
+    @Override
+    public void save(Calc entity) {
+        if (EmptyUtils.isEmpty(entity.getId())) {
+            this.insert(entity);
+        } else {
+            this.update(entity);
+        }
     }
 
     @Override
@@ -43,7 +56,7 @@ public class CalcServiceImpl extends BaseServiceImpl<Calc> implements CalcServic
         if (size == incr || incr.compareTo(size1) > 0) {
             System.out.println("size = " + size + " = " + incr + " = " + size1);
             cacheSize += size1;
-            this.generator(cacheSize.intValue() & 3 + 2, tag);
+            this.generator(cacheSize.intValue() % 3 + 3, tag);
         }
         List<String> list = redisTemplate.opsForSet()
                 .randomMembers(CacheConstant.CACHE_KEY_CALC_TYPE_OBJ + tag, size);
@@ -79,7 +92,7 @@ public class CalcServiceImpl extends BaseServiceImpl<Calc> implements CalcServic
             List numList = RandomUtils.randomList(size, num);
             StringBuffer nums = new StringBuffer();
             StringBuffer sbf = new StringBuffer();
-            if (tag == AppConstant.N_STR) {
+            if (AppConstant.N_STR.equals(tag)) {
                 nums.append(numList.get(0));
                 sbf.append(numList.get(0));
                 for (int a = 1; a < size; a++) {
@@ -98,11 +111,11 @@ public class CalcServiceImpl extends BaseServiceImpl<Calc> implements CalcServic
             System.out.println("sbf = " + sbf.toString());
             // 计算表达式
             Calc calc = new Calc();
-            calc.setShopId(AppConstant.SHOP_DEFAULT);
+            calc.setShopId(basicProperties.getConfig().getShopId());
             calc.setType(tag);
             calc.setNums(nums.toString());
             calc.setContent(sbf.toString());
-            if (tag == AppConstant.N_STR) {
+            if (AppConstant.N_STR.equals(tag)) {
                 this.compute(calc);
             } else {
                 this.compute2(calc);

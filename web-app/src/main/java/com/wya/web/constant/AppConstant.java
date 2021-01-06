@@ -26,10 +26,8 @@ public class AppConstant {
     public final static Integer N_INT = 0;
     public final static Integer NEGATIVE_INT = -1;
 
-    public final static Integer LIST_SIZE = 10;
-    public final static Integer MAX_SIZE = 20;
+    public final static Integer NEXT_SIZE = 4;
 
     public final static long SHOP_DEFAULT = 1L;
 
-    public final static ShopEntity properties = SpringUtils.getBean("shopEntity");
 }

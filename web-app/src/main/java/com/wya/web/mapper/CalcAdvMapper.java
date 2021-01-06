@@ -1,9 +1,9 @@
 package com.wya.web.mapper;
 
 import com.wya.pub.BaseMapper;
-import com.wya.web.model.Activity;
+import com.wya.web.model.CalcAdv;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ActivityMapper extends BaseMapper<Activity> {
+public interface CalcAdvMapper extends BaseMapper<CalcAdv> {
 }

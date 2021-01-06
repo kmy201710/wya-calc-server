@@ -42,15 +42,25 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     }
 
     @Override
+    public void save(User entity) {
+        if (EmptyUtils.isEmpty(entity.getId())) {
+            this.insert(entity);
+        } else {
+            this.update(entity);
+        }
+    }
+
+    @Override
     public Object sendLoginCode(String phoneNo) {
-        List<Calc> list = calcService.getNext(1, "0");
-        Calc calc = list.get(0);
-        if (!AppConstant.NAN_STR.equals(calc.getCalculations()) && Integer.valueOf(calc.getCalculations()) > 0) {
-            User user = this.getByPhoneNo(phoneNo);
-            if (EmptyUtils.isEmpty(user)) {
-                calc.setVersion(-1);
+        List<Calc> list = calcService.getNext(AppConstant.NEXT_SIZE, "0");
+        for (Calc calc : list) {
+            if (!AppConstant.NAN_STR.equals(calc.getCalculations()) && Integer.valueOf(calc.getCalculations()) > 0) {
+                User user = this.getByPhoneNo(phoneNo);
+                if (EmptyUtils.isEmpty(user)) {
+                    calc.setVersion(-1);
+                }
+                return JSON.toJSON(calc);
             }
-            return JSON.toJSON(calc);
         }
         return this.sendLoginCode(phoneNo);
     }
@@ -82,7 +92,8 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         if (EmptyUtils.isEmpty(phoneNo) || EmptyUtils.isEmpty(password)) {
             return null;
         }
-        String md = MD5Utils.MD(secret_key + password + phoneNo);
+//        String md = MD5Utils.MD(secret_key + password + phoneNo);
+        String md = MD5Utils.MD(secret_key + password);
         User user = this.getByPhoneNo(phoneNo);
         if (EmptyUtils.isEmpty(user)) {
             return null;
@@ -110,7 +121,8 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         User user = this.getByPhoneNo(phoneNo);
         if (!EmptyUtils.isEmpty(user)) {
             entity.setId(user.getId());
-            entity.setPassword(MD5Utils.MD(secret_key + password + phoneNo));
+//            entity.setPassword(MD5Utils.MD(secret_key + password + phoneNo));
+            entity.setPassword(MD5Utils.MD(secret_key + password));
             userMapper.modifyPassword(entity);
             String token = TokenUtils.token(user.getName(), phoneNo);
             Map<String, Object> resultMap = new HashMap<>();
@@ -155,10 +167,11 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
     private User createUser(User entity) {
         entity.setName("小无芽");
-        entity.setPassword(MD5Utils.MD(secret_key + password_123 + entity.getPhoneNo()));
+//        entity.setPassword(MD5Utils.MD(secret_key + password_123 + entity.getPhoneNo()));
+        entity.setPassword(MD5Utils.MD(secret_key + password_123));
         entity.setAvatar("/image/home/wya.jpg");
         CommService.initCreate(entity);
-        this.insert(entity);
+        this.save(entity);
         return entity;
     }
 }

@@ -1,22 +1,18 @@
 package com.wya.web.service;
 
 import com.wya.pub.BaseModel;
-import com.wya.web.config.properties.DynamicDataSource;
-import com.wya.web.constant.CacheConstant;
+import com.wya.web.api.CalcApi;
 import com.wya.web.utils.DateUtils;
-import com.wya.web.utils.EmptyUtils;
-import com.wya.web.utils.TokenUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * @author wya
@@ -28,43 +24,42 @@ import java.util.concurrent.TimeUnit;
 public class CommService implements ApplicationRunner {
     private static Logger logger = LoggerFactory.getLogger(CommService.class);
 
-    //    @Resource(name = "dynamicDataSource")
-    @Resource
-    private DynamicDataSource dynamicDataSource;
-    @Resource
-    private RedisTemplate<String, String> redisTemplate;
     @Autowired
-    private CalcService calcService;
+    private CalcApi calcApi;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
         System.out.println("MyApplicationRunner class will be execute when the project was started!");
-//        String env = getEnv();
-//        System.out.println("env = " + env);
-        logger.info("===>> dynamicDataSource:{}", dynamicDataSource);
-        this.setSession("");
+        this.getNext();
         this.generator();
     }
 
-    public String setSession(String loginName) {
-        logger.info("===>> setSession loginName:{}", loginName);
-        String token;
-        if (EmptyUtils.isEmpty(loginName)) {
-            return null;
-        }
-        token = TokenUtils.token(loginName, loginName);
-        redisTemplate.opsForValue().set(CacheConstant.CACHE_KEY_USER_TOKEN_PHONE + token, loginName);
-        redisTemplate.expire(CacheConstant.CACHE_KEY_USER_TOKEN_PHONE + token, CacheConstant.CACHE_TIME_DEFAULT, TimeUnit.SECONDS);
-        return token;
+    public void getNext() {
+//        logger.info("===== getNext size:{}, tag:{}", size, tag);
+//        System.out.println("url = " + url + "/app/calc/next?size=3&tag=1");
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                calcApi.getNext("size=3&tag=0");
+                System.out.println("Task is processing.");// 此处可以插入自己bai想运行的代码片段
+            }
+        };
+        Timer timer = new Timer();
+        timer.schedule(task, 10000);//此处启动要运行的程序。
     }
 
     public void generator() {
-        new Thread(new Runnable() {
+//        logger.info("===== generator size:{}, tag:{}", size, tag);
+//        System.out.println("url = " + url + "/app/calc/generator?size=3&tag=1");
+        TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                calcService.generator(3, "0");
+                calcApi.generator("size=3&tag=1");
+                System.out.println("Task is processing.");// 此处可以插入自己bai想运行的代码片段
             }
-        }).start();
+        };
+        Timer timer = new Timer();
+        timer.schedule(task, 20000);//此处启动要运行的程序。
     }
 
     public static <T extends BaseModel> void initCreate(T t) {

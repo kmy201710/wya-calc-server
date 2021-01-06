@@ -88,4 +88,6 @@ public interface BaseService<T> {
      * @return 数据列表
      */
     public PageInfo<T> pageList(T t, int pageNum, int pageSize, boolean count);
+
+    public void save(T t);
 }

@@ -135,7 +135,7 @@ public class LoginController extends BaseController {
         Long size = redisTemplate.opsForSet().size(CacheConstant.CACHE_KEY_CALC_TYPE_OBJ + AppConstant.N_STR);
         size += redisTemplate.opsForSet().size(CacheConstant.CACHE_KEY_CALC_TYPE_OBJ + AppConstant.Y_STR);
         Map<String, String> params = this.handleData("/image/home/wya.jpg", "数学表达式(" + size + ")", "/info/calc");
-        Map<String, String> params1 = this.handleData("/image/home/user.png", "动态答题信息(敬请期待)", "/info/userCalc");
+        Map<String, String> params1 = this.handleData("/image/home/user.png", "动态信息(敬请期待)", "/info/userCalc");
         Map<String, String> params2 = this.handleData("/image/home/user.png", "活动信息(敬请期待)", "/info/user");
         Map<String, String> params3 = this.handleData("/image/home/user.png", "任务信息(敬请期待)", "/info/user");
         Map<String, String> params4 = this.handleData("/image/home/user.png", "商品信息(敬请期待)", "/info/user");

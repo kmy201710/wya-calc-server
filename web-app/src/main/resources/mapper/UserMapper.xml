@@ -48,14 +48,11 @@
             <if test="name != null and name != ''">
                 AND t.name = #{name}
             </if>
-            <if test="password != null and password != ''">
-                AND t.password = #{password}
-            </if>
             <if test="phoneNo != null and phoneNo != ''">
                 AND t.phone_no = #{phoneNo}
             </if>
-            <if test="certNo != null and certNo != ''">
-                AND t.cert_no = #{certNo}
+            <if test="password != null and password != ''">
+                AND t.password = #{password}
             </if>
             AND t.`is_enable` = 1
         </trim>
