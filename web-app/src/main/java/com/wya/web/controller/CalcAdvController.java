@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/calcAdv")
 public class CalcAdvController extends BaseController<CalcAdv> {
     private static Logger logger = LoggerFactory.getLogger(CalcAdvController.class);
 

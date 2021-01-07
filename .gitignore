@@ -4,3 +4,9 @@
 */**/*.iml
 
 */**/target
+
+vue-mobile-login/vue.config.js
+
+vue-mobile-login/build/**
+vue-mobile-login/node_modules/**
+vue-mobile-login/vue.config.js

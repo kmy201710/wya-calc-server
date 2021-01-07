@@ -28,7 +28,7 @@
 	<sql id="Base_Column_List">
         `id`, `shop_id`, `user_id`, `user_name`,
         `calculation_id`, `type`, `content`, `nums`, `calculations`,
-     	`submit_text`, `is_true,
+     	`submit_text`, `is_true`,
         `state`, `remark`, `short_date`, `create_time`, `create_user`, `update_time`, `update_user`,
         `version`, `is_enable`
     </sql>
