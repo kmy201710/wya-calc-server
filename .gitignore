@@ -1,12 +1,21 @@
 # Created by .ignore support plugin (hsz.mobi)
+#配置语法（pattern规则）
+#以 / 开头表示根目录,防止递归
+#以 / 结尾表示指定目录
+#以 ! 开头表示不过滤（跟踪）此项配置匹配到的文件或目录
+#以 # 开头表示注释，如需转义在前面加斜杠，/#
+#配置规则可以使用标准的glob模式匹配(glob模式是指shell所使用的简化了的正则表达式)
+#* 通配符，多字符通配
+#**表示匹配任意中间目录如，a/**/z 表示可以匹配a/z、a/s/z或 a/a/s/z 等
+#? 通配符，单字符通配
+#[] 可以匹配任何一个在方括号中的字符, 如*.[ac] 表示匹配任何以 .a 或者 .c 结尾的文件，如果[]中有短划线 - 分割两个字符，则表示所有两个字符范围内的都可以匹配如 [0-9]
+
 .idea
 
-*/**/*.iml
+/**/*.iml
 
-*/**/target
+/**/target
 
-vue-mobile-login/vue.config.js
-
-vue-mobile-login/build/**
-vue-mobile-login/node_modules/**
-vue-mobile-login/vue.config.js
+/**/build/**
+/**/node_modules/**
+/**/vue.config.js
