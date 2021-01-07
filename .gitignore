@@ -16,6 +16,6 @@
 
 /**/target
 
-/**/build/**
-/**/node_modules/**
-/**/vue.config.js
+/**/build
+
+/**/node_modules
