@@ -52,14 +52,15 @@ public class CalcServiceImpl extends BaseServiceImpl<Calc> implements CalcServic
         logger.info("===>> getNext size:{}, cacheSize:{}", size, cacheSize);
         List<Calc> result = new ArrayList<>();
         Long incr = IncrementUtils.getIncr(CacheConstant.CACHE_KEY_CALC_INCREMENT, size);
-        Long size1 = redisTemplate.opsForSet().size(CacheConstant.CACHE_KEY_CALC_TYPE_OBJ + tag);
+        String redisKey = CacheConstant.CACHE_KEY_CALC_TYPE_OBJ + tag;
+        Long size1 = redisTemplate.opsForSet().size(redisKey);
         if (size == incr || incr.compareTo(size1) > 0) {
             System.out.println("size = " + size + " = " + incr + " = " + size1);
             cacheSize += size1;
-            this.generator(3, tag);
+            this.generator(AppConstant.NEXT_SIZE, tag);
+            IncrementUtils.setIncr(CacheConstant.CACHE_KEY_CALC_INCREMENT, AppConstant.Y_STR);
         }
-        List<String> list = redisTemplate.opsForSet()
-                .randomMembers(CacheConstant.CACHE_KEY_CALC_TYPE_OBJ + tag, size);
+        List<String> list = redisTemplate.opsForSet().randomMembers(redisKey, size);
         for (String ss : list) {
             Calc calc = JSON.parseObject(ss, Calc.class);
             result.add(calc);
@@ -78,15 +79,14 @@ public class CalcServiceImpl extends BaseServiceImpl<Calc> implements CalcServic
     public List<Calc> generator(int size, String tag) {
         logger.info("===>> generator size:{}, tag:{}, cacheSize:{}", size, tag, cacheSize);
         int currentDate = DateUtils.getCurrentDay();
-        String redisKey = CacheConstant.CACHE_KEY_CALC_GENERATOR + currentDate;
-        Boolean ifAbsent = redisTemplate.opsForValue().setIfAbsent(redisKey, AppConstant.Y_STR);
+        Boolean ifAbsent = redisTemplate.opsForValue().setIfAbsent(CacheConstant.CACHE_KEY_CALC_GENERATOR + currentDate, AppConstant.Y_STR);
         if (!ifAbsent) {
             return null;
         }
-        redisTemplate.expire(redisKey, CacheConstant.CACHE_TIME_SHORT, TimeUnit.SECONDS);
-        IncrementUtils.setIncr(CacheConstant.CACHE_KEY_CALC_INCREMENT, AppConstant.Y_STR);
-        int n = currentDate & 3;
-        int num = n == 0 ? 3 : n;
+        redisTemplate.expire(CacheConstant.CACHE_KEY_CALC_GENERATOR + currentDate, CacheConstant.CACHE_TIME_SHORT, TimeUnit.SECONDS);
+        long now = System.currentTimeMillis();
+        int n = (int) (now & 3);
+        int num = n == 0 ? 2 : n;
         List<Calc> list = new ArrayList<>();
         for (int i = 0; i < cacheSize; i++) {
             List tagList = RandomUtils.randomList(size);
@@ -101,7 +101,7 @@ public class CalcServiceImpl extends BaseServiceImpl<Calc> implements CalcServic
                     sbf.append(tagList.get(a)).append(numList.get(a));
                 }
             } else {
-                List numList2 = RandomUtils.randomList(size, num);
+                List numList2 = RandomUtils.randomList(size, num == 1 ? 2 : num- 1);
                 nums.append(numList.get(0)).append(AppConstant.POINT_CONCAT).append(numList2.get(0));
                 sbf.append(numList.get(0)).append(AppConstant.POINT_CONCAT).append(numList2.get(0));
                 for (int a = 1; a < size; a++) {
@@ -122,8 +122,9 @@ public class CalcServiceImpl extends BaseServiceImpl<Calc> implements CalcServic
                 this.compute2(calc);
             }
             calc.setContent(sbf.toString() + " =");
-            redisTemplate.opsForSet().add(CacheConstant.CACHE_KEY_CALC_TYPE_OBJ + tag, JSON.toJSONString(calc));
-            redisTemplate.expire(CacheConstant.CACHE_KEY_CALC_TYPE_OBJ + tag, CacheConstant.CACHE_TIME_DEFAULT, TimeUnit.SECONDS);
+            String redisKey = CacheConstant.CACHE_KEY_CALC_TYPE_OBJ + tag;
+            redisTemplate.opsForSet().add(redisKey, JSON.toJSONString(calc));
+            redisTemplate.expire(redisKey, CacheConstant.CACHE_TIME_DEFAULT, TimeUnit.SECONDS);
             CommService.initCreate(calc);
             list.add(calc);
         }

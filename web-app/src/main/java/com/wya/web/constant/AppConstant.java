@@ -1,5 +1,6 @@
 package com.wya.web.constant;
 
+import com.wya.pub.ShopModel;
 import com.wya.web.config.properties.ShopEntity;
 import com.wya.web.utils.SpringUtils;
 
@@ -30,4 +31,9 @@ public class AppConstant {
 
     public final static long SHOP_DEFAULT = 1L;
 
+    public static ShopEntity shopEntity = SpringUtils.getBean("shopEntity");
+
+    public static ShopModel getConfig() {
+        return shopEntity.getConfig();
+    }
 }

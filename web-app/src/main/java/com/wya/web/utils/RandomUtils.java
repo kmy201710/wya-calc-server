@@ -2,7 +2,7 @@ package com.wya.web.utils;
 
 import com.wya.web.constant.AppConstant;
 import com.wya.web.constant.CacheConstant;
-import com.wya.web.mock.RedisData;
+import com.wya.web.mock.RedisMock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -74,7 +74,7 @@ public class RandomUtils {
         String redisKey = CacheConstant.CACHE_KEY_CALC_RANDOM_OPERATOR;
         List<String> result = setOpt.randomMembers(redisKey, size);
         if (EmptyUtils.isEmpty(result)) {
-            RedisData.setOpt(redisTemplate, 0);
+            RedisMock.initCreate(redisTemplate, 0);
             return randomList(size);
         }
 //        redisTemplate.expire(redisKey, CacheConstant.CACHE_TIME_DEFAULT, TimeUnit.SECONDS);
@@ -94,7 +94,7 @@ public class RandomUtils {
         String redisKey = CacheConstant.CACHE_KEY_CALC_RANDOM_NUMS + AppConstant.MINUS_CONCAT + n;
         List<String> result = setOpt.randomMembers(redisKey, size);
         if (EmptyUtils.isEmpty(result)) {
-            RedisData.setOpt(redisTemplate, n);
+            RedisMock.initCreate(redisTemplate, n);
             return randomList(size, n);
         }
 //        redisTemplate.expire(redisKey, CacheConstant.CACHE_TIME_DEFAULT, TimeUnit.SECONDS);
@@ -114,7 +114,7 @@ public class RandomUtils {
         String redisKey = CacheConstant.CACHE_KEY_CALC_RANDOM_NUMS + AppConstant.MINUS_CONCAT + n;
         Set<String> result = setOpt.distinctRandomMembers(redisKey, size);
         if (EmptyUtils.isEmpty(result)) {
-            RedisData.setOpt(redisTemplate, n);
+            RedisMock.initCreate(redisTemplate, n);
             return randomSet(size, n);
         }
 //        redisTemplate.expire(redisKey, CacheConstant.CACHE_TIME_DEFAULT, TimeUnit.SECONDS);

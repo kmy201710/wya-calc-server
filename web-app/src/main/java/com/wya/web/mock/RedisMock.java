@@ -2,7 +2,6 @@ package com.wya.web.mock;
 
 import com.wya.web.constant.AppConstant;
 import com.wya.web.constant.CacheConstant;
-import com.wya.web.utils.DateUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 
@@ -17,17 +16,16 @@ import java.util.concurrent.TimeUnit;
  * @date 2020/12/26 12:44
  * @Description: No Description
  */
-public class RedisData {
+public class RedisMock {
 
-    public static void setOpt(RedisTemplate<String, String> redisTemplate, int n) {
+    public static void initCreate(RedisTemplate<String, String> redisTemplate, int n) {
         SetOperations<String, String> setOpt = redisTemplate.opsForSet();
         String redisKey;
         String[] arr;
         if (n == 0) {
             redisKey = CacheConstant.CACHE_KEY_CALC_RANDOM_OPERATOR;
-            int currentDate = DateUtils.getCurrentDay();
-            int tag = currentDate & 3;
-            if (tag == 0) {
+            long now = System.currentTimeMillis();
+            if ((now & 3) == 0) {
                 arr = new String[]{"+", "-"};
             } else {
                 arr = new String[]{"+", "-", "*", "/"};

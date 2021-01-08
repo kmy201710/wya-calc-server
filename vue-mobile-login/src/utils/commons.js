@@ -9,7 +9,7 @@ function isCode(code) {
 // https://segmentfault.com/a/1190000015842187
 // https://blog.51cto.com/longlei/2142957
 // 定义一些公共的属性和方法
-// const httpUrl = 'http://192.168.0.101'
+// const preUrl = 'http://localhost'
 
 const preUrl = 'http://8.136.103.138:80'
 // const preUrl = 'http://8.136.103.138:81'

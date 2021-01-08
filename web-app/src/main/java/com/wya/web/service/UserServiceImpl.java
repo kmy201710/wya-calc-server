@@ -139,11 +139,19 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
     @Override
     public User getByPhoneNo(String phoneNo) {
+        String redisKey = CacheConstant.CACHE_KEY_USER_PHONE_OBJ + phoneNo;
+        String val = redisTemplate.opsForValue().get(redisKey);
+        if (!EmptyUtils.isEmpty(val)) {
+            return JSON.parseObject(val, User.class);
+        }
         User entity = new User();
         entity.setPhoneNo(phoneNo);
         List<User> list = this.getList(entity);
         if (!EmptyUtils.isEmpty(list)) {
-            return list.get(0);
+            User user = list.get(0);
+            redisTemplate.opsForValue().set(redisKey, JSON.toJSONString(user));
+            redisTemplate.expire(redisKey, CacheConstant.CACHE_TIME_DEFAULT, TimeUnit.SECONDS);
+            return user;
         }
         return null;
     }
