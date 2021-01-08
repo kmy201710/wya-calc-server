@@ -56,7 +56,7 @@ public class CalcServiceImpl extends BaseServiceImpl<Calc> implements CalcServic
         if (size == incr || incr.compareTo(size1) > 0) {
             System.out.println("size = " + size + " = " + incr + " = " + size1);
             cacheSize += size1;
-            this.generator(cacheSize.intValue() % 3 + 3, tag);
+            this.generator(3, tag);
         }
         List<String> list = redisTemplate.opsForSet()
                 .randomMembers(CacheConstant.CACHE_KEY_CALC_TYPE_OBJ + tag, size);
@@ -85,7 +85,8 @@ public class CalcServiceImpl extends BaseServiceImpl<Calc> implements CalcServic
         }
         redisTemplate.expire(redisKey, CacheConstant.CACHE_TIME_SHORT, TimeUnit.SECONDS);
         IncrementUtils.setIncr(CacheConstant.CACHE_KEY_CALC_INCREMENT, AppConstant.Y_STR);
-        String num = AppConstant.N_STR.equals(tag) ? "1" : "2";
+        int n = currentDate & 3;
+        int num = n == 0 ? 3 : n;
         List<Calc> list = new ArrayList<>();
         for (int i = 0; i < cacheSize; i++) {
             List tagList = RandomUtils.randomList(size);

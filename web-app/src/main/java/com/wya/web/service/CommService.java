@@ -45,7 +45,7 @@ public class CommService implements ApplicationRunner {
             }
         };
         Timer timer = new Timer();
-        timer.schedule(task, 10000);//此处启动要运行的程序。
+        timer.schedule(task, 3000);//此处启动要运行的程序。
     }
 
     public void generator() {
@@ -59,7 +59,7 @@ public class CommService implements ApplicationRunner {
             }
         };
         Timer timer = new Timer();
-        timer.schedule(task, 20000);//此处启动要运行的程序。
+        timer.schedule(task, 30000);//此处启动要运行的程序。
     }
 
     public static <T extends BaseModel> void initCreate(T t) {

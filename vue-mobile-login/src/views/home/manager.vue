@@ -47,7 +47,7 @@
         managerList: [
           { icon: local, title: "数学表达式", url: "/info/calc"},
           { icon: local, title: "动态信息", url: "/info/user"},
-        //   { icon: local, title: "商品列表", url: "/info/user"},
+          { icon: local, title: "商品列表", url: "/info/user"},
         //   { icon: local, title: "订单列表", url: "/info/user"},
         //   { icon: local, title: "===麻辣香锅1", url: "/info/managerCenter"},
         //   { icon: local, title: "===麻辣香锅2", url: "/info/managerCenter"},
@@ -67,9 +67,6 @@
           {name: '小学生', index: 10},
           {name: '中学生', index: 20},
           {name: '大学生', index: 30},
-          {name: '自由人', index: 40},
-          {name: '自主创业', index: 50},
-          {name: '自由职业', index: 60},
         ]
       }
     },

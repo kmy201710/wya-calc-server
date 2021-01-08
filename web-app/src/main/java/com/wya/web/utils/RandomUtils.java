@@ -2,15 +2,14 @@ package com.wya.web.utils;
 
 import com.wya.web.constant.AppConstant;
 import com.wya.web.constant.CacheConstant;
+import com.wya.web.mock.RedisData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author wya
@@ -74,20 +73,11 @@ public class RandomUtils {
         SetOperations<String, String> setOpt = redisTemplate.opsForSet();
         String redisKey = CacheConstant.CACHE_KEY_CALC_RANDOM_OPERATOR;
         List<String> result = setOpt.randomMembers(redisKey, size);
-        if (result == null || result.size() == 0) {
-            String[] arr;
-            int currentDate = DateUtils.getCurrentDay();
-            int tag = currentDate & 3;
-            if (tag == 0) {
-                arr = new String[]{"+", "-"};
-            } else {
-                arr = new String[]{"+", "-", "*", "/"};
-            }
-            logger.info("arr:{}", Arrays.asList(arr));
-            setOpt.add(redisKey, arr);
-            redisTemplate.expire(redisKey, CacheConstant.CACHE_TIME_DEFAULT, TimeUnit.SECONDS);
-            result = setOpt.randomMembers(redisKey, size);
+        if (EmptyUtils.isEmpty(result)) {
+            RedisData.setOpt(redisTemplate, 0);
+            return randomList(size);
         }
+//        redisTemplate.expire(redisKey, CacheConstant.CACHE_TIME_DEFAULT, TimeUnit.SECONDS);
 //        logger.info("result:{}", result);
         return result; //随机返回5个，可以重复
     }
@@ -99,10 +89,15 @@ public class RandomUtils {
      * @param n    指定范围最大值
      * @return
      */
-    public static List<String> randomList(int size, String n) {
+    public static List<String> randomList(int size, int n) {
         SetOperations<String, String> setOpt = redisTemplate.opsForSet();
         String redisKey = CacheConstant.CACHE_KEY_CALC_RANDOM_NUMS + AppConstant.MINUS_CONCAT + n;
         List<String> result = setOpt.randomMembers(redisKey, size);
+        if (EmptyUtils.isEmpty(result)) {
+            RedisData.setOpt(redisTemplate, n);
+            return randomList(size, n);
+        }
+//        redisTemplate.expire(redisKey, CacheConstant.CACHE_TIME_DEFAULT, TimeUnit.SECONDS);
 //        logger.info("result:{}", result);
         return result; //随机返回5个，可以重复
     }
@@ -118,6 +113,11 @@ public class RandomUtils {
         SetOperations<String, String> setOpt = redisTemplate.opsForSet();
         String redisKey = CacheConstant.CACHE_KEY_CALC_RANDOM_NUMS + AppConstant.MINUS_CONCAT + n;
         Set<String> result = setOpt.distinctRandomMembers(redisKey, size);
+        if (EmptyUtils.isEmpty(result)) {
+            RedisData.setOpt(redisTemplate, n);
+            return randomSet(size, n);
+        }
+//        redisTemplate.expire(redisKey, CacheConstant.CACHE_TIME_DEFAULT, TimeUnit.SECONDS);
 //        logger.info("result:{}", result);
         return result; //随机返回5个，没有重复
     }
