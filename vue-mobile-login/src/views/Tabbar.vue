@@ -14,10 +14,10 @@
 
     <van-tabbar-item
             replace
-            to="/travel"
+            to="/live"
     >
-      <!-- <span>任务</span> -->
-      <span>行程</span>
+      <!-- <span>行程</span> -->
+      <span>动态</span>
       <img
               slot="icon"
               slot-scope="props"
@@ -25,12 +25,12 @@
               alt="">
     </van-tabbar-item>
 
-    <div class="tabbar-item">
+    <!-- <div class="tabbar-item">
     </div>
     <img
             class="addImg"
             :src="icon.add"
-            alt="">
+            alt=""> -->
 
     <van-tabbar-item
             replace

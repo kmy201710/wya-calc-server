@@ -6,6 +6,10 @@ export default {
    * 退出登录
    */
   logout(state){
+    state.user = null;
+    localStorage.removeItem('id');
+    localStorage.removeItem('name');
+
     state.token = null;
     // 清除token
     localStorage.removeItem('token');
@@ -21,8 +25,12 @@ export default {
    * @param token
    */
   login(state, data){
+    state.user.id = data.user.id;
+    state.user.name = data.user.name;
     state.user.shop = data.user.shopId;
     state.user.role = data.user.roleId;
+    localStorage.setItem('id', data.user.id);
+    localStorage.setItem('name', data.user.name);
     localStorage.setItem('shop', data.user.shopId);
     localStorage.setItem('role', data.user.roleId);
 

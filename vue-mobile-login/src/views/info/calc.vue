@@ -4,8 +4,8 @@
 <template>
   <div style="padding: 5px" >
     <nav-bar></nav-bar>
-    <!-- <div style="text-align: center" v-show="isShow">
-      <span v-on:click="back">返回</span>
+    <!-- <div style="padding: 5px; text-align: center" v-show="isShow">
+      <span v-on:click="back">答题</span>
     </div> -->
   <!-- <div style="padding: 5px 10px;"> -->
     <!-- <div style="margin-bottom: 20px">

@@ -10,6 +10,8 @@ const state = {
   phone: localStorage.getItem("phone"),
   
   user: {
+    id: localStorage.getItem("id"),
+    name: localStorage.getItem("name"),
     shop: localStorage.getItem("shop"),
     role: localStorage.getItem("role"),
   }

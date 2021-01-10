@@ -15,7 +15,3 @@
 /**/*.iml
 
 /**/target
-
-/**/build
-
-/**/node_modules

@@ -1,25 +1,14 @@
 <template>
   <div>
-    <div style="padding: 20px; text-align: center">
-      <div style="font-size: 20px; font-weight: bold;">数学表达式</div>
-    </div>
-    <!-- <nav-bar></nav-bar> -->
+    <nav-bar></nav-bar>
     <section style="padding: 30px 30px; display: flex; flex-flow: column nowrap;">
-      <div style="font-size: 16px; font-weight: bold;">每题（2分）</div>
+      <div style="font-size: 20px; font-weight: bold;">手机号密码登录</div>
       <div>
-        <van-dropdown-menu active-color="#ee0a24">
-          <van-dropdown-item 
-            v-model="value"
-            :title="title"
-            :options="optionList"
-            @change="changeOption"
-          />
-        </van-dropdown-menu>
         <van-cell-group>
           <van-field
                   v-model="tel"
                   clearable
-                  placeholder="请输入数学表达式"
+                  placeholder="请输入手机号"
                   style="background-color: WhiteSmoke"
                   ref="phone"
                   @blur="blur"
@@ -29,7 +18,7 @@
                   v-model="pwd"
                   center
                   clearable
-                  placeholder="请输入计算结果"
+                  placeholder="请输入密码"
                   style="background-color: WhiteSmoke"
                   ref="pwd"
                   type="password"
@@ -39,41 +28,59 @@
         <span style="color: red" v-show="errMsg">{{ errMsg }}</span>
       </div>
       <div style="background-color: DarkGray">
-        <van-button :type="type" block :disabled="loginDisabled" @click="submit">提交</van-button>
+        <van-button :type="type" block :disabled="loginDisabled" @click="login">登录</van-button>
       </div>
       <div>
-        跳过&nbsp;<a @click="toRetrievePwd">下一题</a>
+        忘记了？&nbsp;<a @click="toRetrievePwd">找回密码</a>
       </div>
     </section>
   </div>
 </template>
 
 <script>
-  // import NavBar from "@/components/NavBar";
+  import NavBar from "@/components/NavBar";
   import { resTrue, isPhone } from '@/utils/commons'
   import { loginByPwd } from "@/api";
 
   export default {
     name: "LoginByPwd",
-    // components: {NavBar},
+    components: {NavBar},
     mounted(){
       // 输入框聚焦
       if(!this.tel){
         this.$refs.phone.focus();
-      } else {
+      }else {
         this.$refs.pwd.focus();
+      }
+    },
+    watch:{
+      // 监听手机号和密码输入框，修改登录按钮状态和类型
+      pwd(newVal){
+        if(isPhone(this.tel) && newVal.length > 0){
+          this.loginDisabled = false;
+          this.type = 'danger'
+        } else {
+          this.loginDisabled = 'disabled';
+          this.type = 'default'
+        }
+      },
+      tel(newVal, oldVal){
+        this.tel = this.tel.replace(/\s+/g, '').replace(/\D/g, '');
+        if (isNaN(newVal) || newVal.length > 11) {
+          this.tel = oldVal;
+          return
+        }
+        if(isPhone(this.tel) && this.pwd.length > 0){
+          this.loginDisabled = false;
+          this.type = 'danger'
+        } else {
+          this.loginDisabled = 'disabled';
+          this.type = 'default'
+        }
       }
     },
     data(){
       return {
-        value: '',
-        title: '请选择类型',
-        optionList: [
-          { text: '简单', value: 0 },
-          { text: '中等', value: 1 },
-          { text: '困难', value: 2 },
-          { text: '自定义（解题）', value: 3 }
-        ],
         // 登录按钮类型
         type: 'default',
         // 手机号
@@ -87,9 +94,9 @@
       }
     },
     methods: {
-      changeOption (i) {
-        this.value = this.optionList[i].value
-        this.title = this.optionList[i].text
+      changeDevelop (i) {
+        this.value = this.developList[i-1].value
+        this.title = this.developList[i-1].text
       },
       blur(){
         // 修改store中phone
@@ -97,8 +104,8 @@
           this.$store.commit('updatePhone', this.tel)
         }
       },
-      // 提交
-      submit(){
+      // 登录
+      login(){
         let params = {
           phoneNo: this.tel,
           password: this.pwd,
@@ -123,6 +130,14 @@
           this.$router.push('/retrievePwd');
           this.errMsg = ''
         }
+      },
+      onCancel() {
+        this.show = false;
+      },
+      onSelect(item) {
+        console.log(item);
+        this.sms = item.index;
+        this.show = false;
       },
     }
   }

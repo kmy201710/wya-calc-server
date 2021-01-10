@@ -86,14 +86,14 @@ public class CalcServiceImpl extends BaseServiceImpl<Calc> implements CalcServic
         redisTemplate.expire(CacheConstant.CACHE_KEY_CALC_GENERATOR + currentDate, CacheConstant.CACHE_TIME_SHORT, TimeUnit.SECONDS);
         long now = System.currentTimeMillis();
         int n = (int) (now & 3);
-        int num = n == 0 ? 2 : n;
+        int num = n == 0 ? 1 : n;
         List<Calc> list = new ArrayList<>();
         for (int i = 0; i < cacheSize; i++) {
             List tagList = RandomUtils.randomList(size);
             List numList = RandomUtils.randomList(size, num);
             StringBuffer nums = new StringBuffer();
             StringBuffer sbf = new StringBuffer();
-            if (AppConstant.N_STR.equals(tag)) {
+            if (AppConstant.N_STR.equals(tag) || AppConstant.Y_STR.equals(tag)) {
                 nums.append(numList.get(0));
                 sbf.append(numList.get(0));
                 for (int a = 1; a < size; a++) {

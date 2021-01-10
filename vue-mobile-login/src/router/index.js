@@ -8,7 +8,8 @@ Vue.use(VueRouter);
 
 // 路由懒加载
 const Home = () => import('../views/home/Home.vue');
-const Travel = () => import('../views/travel/Travel.vue');
+// const Travel = () => import('../views/travel/Travel.vue');
+const Live = () => import('../views/live/Live.vue');
 const News = () => import('../views/news/News.vue');
 const Mine = () => import('../views/mine/Mine.vue');
 const Login = () => import(/* webpackChunkName: "group-login" */ '../views/login/Login.vue');
@@ -29,16 +30,18 @@ const routes = [
     path: '/home',
     component: Home,
     meta: {
-      title: "一个有趣的网站",
+      title: "网站首页",
       requireAuth: false,
       showTab: true
     }
   },
   {
-    path: '/travel',
-    component: Travel,
+    path: '/live',
+    component: Live,
     meta: {
-      requireAuth: false
+      title: "动态信息",
+      requireAuth: false,
+      showTab: true
     }
   },
   {
