@@ -1,10 +1,10 @@
-package com.wya.web.model;
+package com.wya.web.vo;
 
-import com.wya.pub.BaseModel;
+import com.wya.pub.RequestVo;
 import lombok.Data;
 
 @Data
-public class User extends BaseModel {
+public class LoginVo extends RequestVo {
 
 	// ID
 	private Long id;
@@ -23,16 +23,4 @@ public class User extends BaseModel {
 
 	// 密码
 	private String password;
-
-	// 头像
-	private String avatar;
-
-	// 性别（男，女）
-	private String sex;
-
-	// 生日
-	private String birthday;
-
-	// 实名认证
-	private String isVerified;
 }

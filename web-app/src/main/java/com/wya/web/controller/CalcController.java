@@ -41,8 +41,12 @@ public class CalcController extends BaseController<Calc> {
         Calc calc = new Calc();
         BeanUtils.copyProperties(vo, calc);
 //        return this.returnSuccess(this.pageList(calc, vo.getPageNum(), vo.getPageSize(), true));
-        Long size = redisTemplate.opsForSet().size(CacheConstant.CACHE_KEY_CALC_TYPE_OBJ + AppConstant.N_STR);
-        size += redisTemplate.opsForSet().size(CacheConstant.CACHE_KEY_CALC_TYPE_OBJ + AppConstant.Y_STR);
+
+        String redisKey = CacheConstant.CACHE_KEY_CALC_TYPE_OBJ;
+        Long size = redisTemplate.opsForSet().size(redisKey + 0);
+        size += redisTemplate.opsForSet().size(redisKey + 1);
+        size += redisTemplate.opsForSet().size(redisKey + 2);
+        size += redisTemplate.opsForSet().size(redisKey + 3);
         if (size == 0) {
             return this.returnFail();
         }
@@ -75,8 +79,12 @@ public class CalcController extends BaseController<Calc> {
         logger.info("===== compute vo:{}", JSON.toJSON(vo));
         Calc calc = new Calc();
         BeanUtils.copyProperties(vo, calc);
-        calcService.compute(calc);
-        String result = String.format("本次计算结果: %s, 计算表达式: %s", calc.getCalculations(), calc.getContent());
-        return this.returnSuccess(result);
+        if (AppConstant.N_STR.equals(vo.getType())) {
+            calcService.compute(calc);
+        } else {
+            calcService.compute2(calc);
+        }
+        logger.info("本次计算结果:{}, 计算表达式:{}", calc.getCalculations(), calc.getContent());
+        return this.returnSuccess(calc);
     }
 }

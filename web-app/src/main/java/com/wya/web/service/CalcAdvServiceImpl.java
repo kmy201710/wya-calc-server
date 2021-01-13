@@ -26,8 +26,10 @@ public class CalcAdvServiceImpl extends BaseServiceImpl<CalcAdv> implements Calc
     @Override
     public void save(CalcAdv entity) {
         if (EmptyUtils.isEmpty(entity.getId())) {
+            CommService.initCreate(entity);
             this.insert(entity);
         } else {
+            CommService.initUpdate(entity);
             this.update(entity);
         }
     }

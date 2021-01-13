@@ -3,32 +3,19 @@
 // http://doc.huangsw.com/vue-easytable/app.html#/table/basic
 <template>
   <div style="padding: 10px 5px" >
-    <!-- <nav-bar></nav-bar> -->
-    <!-- <div style="padding: 5px; text-align: center" v-show="isShow">
-      <span v-on:click="back">答题</span>
-    </div> -->
-  <!-- <div style="padding: 5px 10px;"> -->
-    <!-- <div style="margin-bottom: 20px">
-      <span> 身份证号：</span><a><input v-model="sfzhcx" placeholder="输入提示"  status="info" style="width:280px;display:inline-block" /></a>
-      <a><button type="primary" @click="selectData">查询</button></a>
-    </div> -->
-    <!-- <div class="page">
-      <div class="inputBox" :class="{inputBoxActive:isNameInputActive}">
-          <span>类型：</span>
-          <input class="inputSelf form-control"  v-model="nameVal" :placeholder="placeholderName" @input="onInputName" @focus="onFocusName" @blur="onBlurName" /> 
-          <label class="inputLabel">your name</label>    
-      </div>
-    </div> -->
-    
     <div class="table_btn">
       <el-row>
         <el-button type="warning"
                     size="mini"
                     @click="addHandler()">新增</el-button>
-        <!-- <el-button type="warning"
-                    size="mini">批量删除</el-button> -->
+        <el-button type="warning"
+                    size="mini">批量删除</el-button>
       </el-row>
     </div>
+    <add-or-update v-if="dialogFormVisible"
+                   ref="addOrUpdate">
+                   <!-- @refreshDataList="getData" -->
+    </add-or-update>
     <v-table is-horizontal-resize column-width-drag style="width:100%" 
       row-hover-color="#eee" 
       row-click-color="#edf7ff"
@@ -58,21 +45,24 @@
 
 <script>
   import NavBar from "@/components/NavBar"
+  import AddOrUpdate from './addEdit'
   import Vue from 'vue'
 
   // 导入共用组件
   import { Toast } from 'vant'
   import { resTrue } from "@/utils/commons"
+  import { list } from "@/api/calc"
 
   export default {
     // name: 'vueeasytable',
     name: 'calculation',
     components: {
-        NavBar
+        NavBar, AddOrUpdate
     },
     data(){
       return{
-        isShow: true,
+        dialogFormVisible: false,
+        // isShow: true,
         // isNameInputActive:false,
         // nameVal:'',
         // placeholderName:'输入信息',
@@ -86,7 +76,7 @@
         page:{
           total:0,
           pageIndex: 1,
-          pageSize: 10,
+          pageSize: 20,
         },
         columns: [
           // {
@@ -127,7 +117,7 @@
             isFrozen: true
           },
           {
-            field: 'content', title: '数学表达式', width: 160, titleAlign: 'center', columnAlign: 'center',
+            field: 'content', title: '表达式', width: 160, titleAlign: 'center', columnAlign: 'center',
             formatter: function (rowData,rowIndex,pagingIndex,field) {
                 return `<span class='cell-edit-color'>${rowData[field]}</span>`;
               },
@@ -198,10 +188,11 @@
           pageNum: this.page.pageIndex,
           pageSize: this.page.pageSize
         }
-        this.$http.post('/calc/pageList', params)
+        console.log(params)
+        list(params)
+        // this.$http.post('/calc/pageList', params)
         // this.$ajax.post(url, params, { emulateJSON: true })
           .then(res => {
-            // console.log(params)
             if (resTrue(res) === 1) {
               if (this.count !== 0) {
                 Toast("刷新成功");
@@ -231,10 +222,10 @@
       // 新增
       addHandler () {
         // debugger
-        // this.dialogFormVisible = true
-        // this.$nextTick(() => {
-        //   this.$refs.addOrUpdate.init()
-        // })
+        this.dialogFormVisible = true
+        this.$nextTick(() => {
+          this.$refs.addOrUpdate.init()
+        })
       },
       // 单元格样式
       columnCellClass(rowIndex,columnName,rowData){
@@ -253,8 +244,7 @@
       },
       rowClick(rowIndex,rowData){
           console.log('rowClick');
-          // alert(`行号：${rowIndex + 1} 提示：${rowData['calculations']}`)
-          alert(`行号：${rowIndex + 1} 提示：${rowData.calculations}`)
+          alert(`行号：${rowIndex + 1}  提示：${rowData.calculations}`)
       },
       // 数据筛选
       filterMethod(filters){

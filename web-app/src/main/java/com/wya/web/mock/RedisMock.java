@@ -31,7 +31,7 @@ public class RedisMock {
                 arr = new String[]{"+", "-", "*", "/"};
             }
         } else {
-            redisKey = CacheConstant.CACHE_KEY_CALC_RANDOM_NUMS + AppConstant.MINUS_CONCAT + n;
+            redisKey = CacheConstant.CACHE_KEY_CALC_RANDOM_NUMS + n;
             List<String> strList = new ArrayList<>();
             int sum = 1;
             for (int i = 0; i < n; i++) {

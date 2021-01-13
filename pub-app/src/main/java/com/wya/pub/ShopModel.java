@@ -5,18 +5,21 @@ import lombok.Data;
 @Data
 public class ShopModel {
 
-	// 指定环境
-	private String env;
+    // 指定环境
+    private String env;
 
-	// 商户ID
-	private Long shopId;
+    // 商户ID
+    private Long shopId;
 
-	// 手机号
-	private String phoneNo;
+    // 角色ID
+    private Long roleId;
 
-	// 地址
-	private String address;
+    // 手机号
+    private String phoneNo;
 
-	// 请求Url
-	private String hostUrl;
+    // 地址
+    private String address;
+
+    // 请求Url
+    private String hostUrl;
 }

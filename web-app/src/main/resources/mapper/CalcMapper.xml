@@ -29,7 +29,7 @@
     <select id="getList" resultMap="BaseResultMap" parameterType="com.wya.web.model.Calc">
         select
         <include refid="Base_Column_List"/>
-        from tc_calc t
+        from ts_calc t
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="id != null">
                 AND t.id = #{id}
@@ -45,12 +45,12 @@
     <select id="get" resultMap="BaseResultMap" parameterType="java.util.HashMap">
         SELECT
         <include refid="Base_Column_List"/>
-        FROM tc_calc t
+        FROM ts_calc t
         WHERE t.`id` = #{id}
     </select>
 
     <insert id="insert" parameterType="com.wya.web.model.Calc" useGeneratedKeys="true" keyProperty="id">
-        insert into tc_calc (<include refid="Base_Column_List"/>)
+        insert into ts_calc (<include refid="Base_Column_List"/>)
         VALUES
         (
         #{id},
@@ -72,7 +72,7 @@
     </insert>
 
     <insert id="insertList" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
-        insert into tc_calc (<include refid="Base_Column_List"/>)
+        insert into ts_calc (<include refid="Base_Column_List"/>)
         VALUES
         <foreach collection="list" item="item" separator=",">
             (

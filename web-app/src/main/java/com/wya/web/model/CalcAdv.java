@@ -34,7 +34,7 @@ public class CalcAdv extends BaseModel {
 	private String calculations;
 
 	// 提交
-	private String submit_text;
+	private String submitText;
 
 	// 验证
 	private String isTrue;

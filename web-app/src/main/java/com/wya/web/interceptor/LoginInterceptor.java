@@ -42,7 +42,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         System.out.println("requestURL = " + requestURL);
 
         String token = request.getHeader("x-access-token");
-        String redisKey = CacheConstant.CACHE_KEY_USER_TOKEN_PHONE + token;
+        String redisKey = CacheConstant.CACHE_KEY_LOGIN_TOKEN_PHONE + token;
         String loginName = redisTemplate.opsForValue().get(redisKey);
         if (EmptyUtils.isEmpty(loginName)) {
             // 未登录，重定向到登录页

@@ -9,6 +9,12 @@ public class IncrementUtils {
 
     private static RedisTemplate<String, String> redisTemplate = SpringUtils.getBean("redisTemplate");
 
+    private final static long delta = 1L;
+
+    public static Long getIncr(String key) {
+        return getIncr(key, delta);
+    }
+
     /**
      * @param key   key
      * @param delta 增长步数

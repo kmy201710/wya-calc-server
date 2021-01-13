@@ -16,10 +16,10 @@ const Login = () => import(/* webpackChunkName: "group-login" */ '../views/login
 const LoginByCode = () => import(/* webpackChunkName: "group-login" */ '../views/login/LoginByCode.vue');
 const LoginByPwd = () => import(/* webpackChunkName: "group-login" */ '../views/login/LoginByPwd.vue');
 const RetrievePwd = () => import(/* webpackChunkName: "group-login" */ '../views/login/RetrievePwd.vue');
-const Add = () => import('../views/add/Add.vue');
-const User = () => import('../views/info/user.vue');
-const Calc = () => import('../views/info/calc.vue');
-const UserCalc = () => import('../views/info/userCalc.vue');
+// const Add = () => import('../views/add/Add.vue');
+const User = () => import('../views/info/user/list.vue');
+const Calc = () => import('../views/info/calc/list.vue');
+const CalcAdv = () => import('../views/info/calc/calcAdv.vue');
 
 const routes = [
   {
@@ -40,13 +40,17 @@ const routes = [
     component: Live,
     meta: {
       title: "动态信息",
-      requireAuth: false,
-      showTab: true
+      requireAuth: true,
+      showTab: false
     }
   },
   {
     path: '/news',
-    component: News
+    component: News,
+    meta: {
+      title: "消息信息",
+      requireAuth: false,
+    }
   },
   {
     path: '/mine',
@@ -85,15 +89,6 @@ const routes = [
     }
   },
   {
-    path: '/add',
-    component: Add,
-    meta: {
-      // title: "一个有趣的网站",
-      requireAuth: false,
-      showTab: true
-    }
-  },
-  {
     path: '/info/user',
     component: User,
     meta: {
@@ -110,10 +105,10 @@ const routes = [
     }
   },
   {
-    path: '/info/userCalc',
-    component: UserCalc,
+    path: '/info/calcAdv',
+    component: CalcAdv,
     meta: {
-      title: "答题详细列表",
+      title: "动态列表",
     }
   },
 ];
@@ -126,7 +121,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   // 需要权限校验
-  if(to.meta.requireAuth === undefined && store.state.token === null){
+  if((to.meta.requireAuth  === undefined || to.meta.requireAuth) && store.state.token === null){
     store.commit('toggleTabbarShow', false);
     next('/login');
   }

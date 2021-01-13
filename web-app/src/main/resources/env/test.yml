@@ -3,6 +3,7 @@ shop-entity:
   config:
     env: test
     shopId: 2
+    roleId: 99
     phoneNo: 1234567
     address: 江西省-抚州市
     hostUrl: http://8.136.103.138:80

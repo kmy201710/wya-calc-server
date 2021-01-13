@@ -87,7 +87,7 @@
     methods: {
       // 手机号输入框校验
       checkPhone(newVal){
-        if (newVal.indexOf('2021') === 0 && newVal.length > 8) {
+        if (newVal.indexOf('2021') === 0 && newVal.length < 8) {
           this.disabled = false;
           this.type = 'danger';
         } else if (isPhone(newVal)) {
@@ -101,7 +101,7 @@
       // 手机号输入框失去焦点事件
       blur(){
         // 修改store中phone
-        if (this.tel.indexOf('2021') === 0 && this.tel.length > 8) {
+        if (this.tel.indexOf('2021') === 0 && this.tel.length < 8) {
           this.$store.commit('updatePhone', this.tel)
         } else if(isPhone(this.tel)){
           this.$store.commit('updatePhone', this.tel)

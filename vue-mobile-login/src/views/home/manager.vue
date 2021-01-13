@@ -85,7 +85,7 @@
           roleId: this.role,
         }
         this.$message({ type: "info", message: params });
-        this.$http.get('/manager/getList', params)
+        this.$http.get('/app/manager/getList', params)
         // this.$ajax.get(url, params)
           .then(res => {
             if (resTrue(res)) {

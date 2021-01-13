@@ -31,7 +31,7 @@ public class CalcAdvController extends BaseController<CalcAdv> {
         logger.info("===== pageList vo:{}", JSON.toJSON(vo));
         CalcAdv calcAdv = new CalcAdv();
         BeanUtils.copyProperties(vo, calcAdv);
-        return this.returnSuccess(this.pageList(calcAdv, vo.getPageNum(), vo.getPageSize(), false));
+        return this.returnSuccess(this.pageList(calcAdv, vo.getPageNum(), vo.getPageSize(), true));
     }
 
     @RequestMapping(value = "/get/{id}", method = RequestMethod.GET)

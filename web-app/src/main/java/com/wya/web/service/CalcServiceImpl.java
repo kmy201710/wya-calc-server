@@ -3,12 +3,14 @@ package com.wya.web.service;
 import com.alibaba.fastjson.JSON;
 import com.wya.pub.BaseMapper;
 import com.wya.pub.BaseServiceImpl;
-import com.wya.web.config.properties.ShopEntity;
 import com.wya.web.constant.AppConstant;
 import com.wya.web.constant.CacheConstant;
 import com.wya.web.mapper.CalcMapper;
 import com.wya.web.model.Calc;
-import com.wya.web.utils.*;
+import com.wya.web.utils.EmptyUtils;
+import com.wya.web.utils.IncrementUtils;
+import com.wya.web.utils.RandomUtils;
+import com.wya.web.utils.SplitUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -28,10 +30,7 @@ public class CalcServiceImpl extends BaseServiceImpl<Calc> implements CalcServic
     @Resource
     private CalcMapper calcMapper;
 
-    @Resource(name = "shopEntity")
-    private ShopEntity basicProperties;
-
-    private static Long cacheSize = 10L;
+    private static int cacheSize = 10;
 
     @Override
     public BaseMapper<Calc> getMapper() {
@@ -41,8 +40,10 @@ public class CalcServiceImpl extends BaseServiceImpl<Calc> implements CalcServic
     @Override
     public void save(Calc entity) {
         if (EmptyUtils.isEmpty(entity.getId())) {
+            CommService.initCreate(entity);
             this.insert(entity);
         } else {
+            CommService.initUpdate(entity);
             this.update(entity);
         }
     }
@@ -78,12 +79,11 @@ public class CalcServiceImpl extends BaseServiceImpl<Calc> implements CalcServic
     @Override
     public List<Calc> generator(int size, String tag) {
         logger.info("===>> generator size:{}, tag:{}, cacheSize:{}", size, tag, cacheSize);
-        int currentDate = DateUtils.getCurrentDay();
-        Boolean ifAbsent = redisTemplate.opsForValue().setIfAbsent(CacheConstant.CACHE_KEY_CALC_GENERATOR + currentDate, AppConstant.Y_STR);
+        Boolean ifAbsent = redisTemplate.opsForValue().setIfAbsent(CacheConstant.CACHE_KEY_CALC_TYPE_GENERATOR + tag, AppConstant.Y_STR);
         if (!ifAbsent) {
             return null;
         }
-        redisTemplate.expire(CacheConstant.CACHE_KEY_CALC_GENERATOR + currentDate, CacheConstant.CACHE_TIME_SHORT, TimeUnit.SECONDS);
+        redisTemplate.expire(CacheConstant.CACHE_KEY_CALC_TYPE_GENERATOR + tag, CacheConstant.CACHE_TIME_SHORT, TimeUnit.SECONDS);
         long now = System.currentTimeMillis();
         int n = (int) (now & 3);
         int num = n == 0 ? 1 : n;
@@ -101,7 +101,7 @@ public class CalcServiceImpl extends BaseServiceImpl<Calc> implements CalcServic
                     sbf.append(tagList.get(a)).append(numList.get(a));
                 }
             } else {
-                List numList2 = RandomUtils.randomList(size, num == 1 ? 2 : num- 1);
+                List numList2 = RandomUtils.randomList(size, num == 1 ? 1 : num - 1);
                 nums.append(numList.get(0)).append(AppConstant.POINT_CONCAT).append(numList2.get(0));
                 sbf.append(numList.get(0)).append(AppConstant.POINT_CONCAT).append(numList2.get(0));
                 for (int a = 1; a < size; a++) {
@@ -112,7 +112,7 @@ public class CalcServiceImpl extends BaseServiceImpl<Calc> implements CalcServic
             System.out.println("sbf = " + sbf.toString());
             // 计算表达式
             Calc calc = new Calc();
-            calc.setShopId(basicProperties.getConfig().getShopId());
+            calc.setShopId(AppConstant.getConfig().getShopId());
             calc.setType(tag);
             calc.setNums(nums.toString());
             calc.setContent(sbf.toString());
@@ -121,7 +121,8 @@ public class CalcServiceImpl extends BaseServiceImpl<Calc> implements CalcServic
             } else {
                 this.compute2(calc);
             }
-            calc.setContent(sbf.toString() + " =");
+            calc.setContent(sbf.toString());
+//            calc.setContent(sbf.toString() + " =");
             String redisKey = CacheConstant.CACHE_KEY_CALC_TYPE_OBJ + tag;
             redisTemplate.opsForSet().add(redisKey, JSON.toJSONString(calc));
             redisTemplate.expire(redisKey, CacheConstant.CACHE_TIME_DEFAULT, TimeUnit.SECONDS);
@@ -136,38 +137,43 @@ public class CalcServiceImpl extends BaseServiceImpl<Calc> implements CalcServic
     @Override
     public void compute(Calc entity) {
         String tag = entity.getType();
-        String nums = entity.getNums().replace(" ", "");
-        String[] params = nums.split(AppConstant.SPLIT_CONCAT);
-        if (AppConstant.NAN_STR.equals(params[0])) {
-            return;
-        }
-        StringBuffer sbf = new StringBuffer(params[0]);
-        Integer result = Integer.valueOf(params[0]);
-        if (EmptyUtils.isEmpty(tag) || AppConstant.PLUS_CONCAT.equals(tag)) {
-            for (int i = 1; i < params.length; i++) {
-                sbf.append("+" + params[i]);
-                result += Integer.valueOf(params[i]);
+        List<String> list = SplitUtils.splitNumber(tag);
+        StringBuffer sbf = new StringBuffer();
+        int result;
+        if (EmptyUtils.isEmpty(list)) {
+            String nums = entity.getNums().replace(" ", "");
+            String[] params = nums.split(AppConstant.SPLIT_CONCAT);
+            if (AppConstant.NAN_STR.equals(params[0])) {
+                return;
             }
-        } else if (AppConstant.MINUS_CONCAT.equals(tag)) {
-            for (int i = 1; i < params.length; i++) {
-                sbf.append("-" + params[i]);
-                result -= Integer.valueOf(params[i]);
-            }
-        } else if (AppConstant.MULTIPLY_CONCAT.equals(tag)) {
-            for (int i = 1; i < params.length; i++) {
-                sbf.append("*" + params[i]);
-                result *= Integer.valueOf(params[i]);
-            }
-        } else if (AppConstant.DIVIDE_CONCAT.equals(tag)) {
-            for (int i = 1; i < params.length; i++) {
-                if (AppConstant.N_STR.equals(params[i])) {
-                    entity.setCalculations(AppConstant.NAN_STR);
-                    return;
+            sbf.append(params[0]);
+            result = Integer.valueOf(params[0]);
+            if (EmptyUtils.isEmpty(tag) || AppConstant.PLUS_CONCAT.equals(tag)) {
+                for (int i = 1; i < params.length; i++) {
+                    sbf.append("+" + params[i]);
+                    result += Integer.valueOf(params[i]);
                 }
-                sbf.append("/" + params[i]);
-                result /= Integer.valueOf(params[i]);
+            } else if (AppConstant.MINUS_CONCAT.equals(tag)) {
+                for (int i = 1; i < params.length; i++) {
+                    sbf.append("-" + params[i]);
+                    result -= Integer.valueOf(params[i]);
+                }
+            } else if (AppConstant.MULTIPLY_CONCAT.equals(tag)) {
+                for (int i = 1; i < params.length; i++) {
+                    sbf.append("*" + params[i]);
+                    result *= Integer.valueOf(params[i]);
+                }
+            } else if (AppConstant.DIVIDE_CONCAT.equals(tag)) {
+                for (int i = 1; i < params.length; i++) {
+                    if (AppConstant.N_STR.equals(params[i])) {
+                        entity.setCalculations(AppConstant.NAN_STR);
+                        return;
+                    }
+                    sbf.append("/" + params[i]);
+                    result /= Integer.valueOf(params[i]);
+                }
             }
-        } else if (AppConstant.Y_STR.equals(entity.getType()) || AppConstant.N_STR.equals(entity.getType())) {
+        } else {
             String content = entity.getContent().replace(" ", "");
             List<String> tagList = SplitUtils.splitNotNumber(content);
             List<String> numList = SplitUtils.splitNumber(content);
@@ -187,13 +193,11 @@ public class CalcServiceImpl extends BaseServiceImpl<Calc> implements CalcServic
                 }
             }
             entity.setContent(content);
-            if (flag) {
-                entity.setCalculations(AppConstant.NAN_STR);
-            } else {
-                entity.setCalculations("" + result);
+//            entity.setContent(content + " =");
+            if (!flag) {
+//                entity.setCalculations("" + result);
+                entity.setCalculations(String.format("%d", result));
             }
-//            System.out.println("content = " + content);
-//            System.out.println("result = " + result);
             return;
         }
 //        redisTemplate.opsForValue().set(CacheConstants.CACHE_KEY_CALC_CONTENT + sbf.toString(), "" + result);
@@ -205,54 +209,67 @@ public class CalcServiceImpl extends BaseServiceImpl<Calc> implements CalcServic
     @Override
     public void compute2(Calc entity) {
         String tag = entity.getType();
-        String nums = entity.getNums().replace(" ", "");
-        String[] params = nums.split(AppConstant.SPLIT_CONCAT);
-        if (AppConstant.NAN_STR.equals(params[0])) {
-            return;
-        }
-        StringBuffer sbf = new StringBuffer(params[0]);
-        double result = Double.valueOf(params[0]);
-        if (EmptyUtils.isEmpty(tag) || AppConstant.PLUS_CONCAT.equals(tag)) {
-            for (int i = 1; i < params.length; i++) {
-                sbf.append("+" + params[i]);
-                result += Double.valueOf(params[i]);
+        List<String> list = SplitUtils.splitNumber(tag);
+        StringBuffer sbf = new StringBuffer();
+        double result;
+        if (EmptyUtils.isEmpty(list)) {
+            String nums = entity.getNums().replace(" ", "");
+            String[] params = nums.split(AppConstant.SPLIT_CONCAT);
+            if (AppConstant.NAN_STR.equals(params[0])) {
+                return;
             }
-        } else if (AppConstant.MINUS_CONCAT.equals(tag)) {
-            for (int i = 1; i < params.length; i++) {
-                sbf.append("-" + params[i]);
-                result -= Double.valueOf(params[i]);
-            }
-        } else if (AppConstant.MULTIPLY_CONCAT.equals(tag)) {
-            for (int i = 1; i < params.length; i++) {
-                sbf.append("*" + params[i]);
-                result *= Double.valueOf(params[i]);
-            }
-        } else if (AppConstant.DIVIDE_CONCAT.equals(tag)) {
-            for (int i = 1; i < params.length; i++) {
-                if (AppConstant.N_STR.equals(params[i])) {
-                    entity.setCalculations(AppConstant.NAN_STR);
-                    return;
+            sbf.append(params[0]);
+            result = Double.valueOf(params[0]);
+            if (EmptyUtils.isEmpty(tag) || AppConstant.PLUS_CONCAT.equals(tag)) {
+                for (int i = 1; i < params.length; i++) {
+                    sbf.append("+" + params[i]);
+                    result += Double.valueOf(params[i]);
                 }
-                sbf.append("/" + params[i]);
-                result /= Double.valueOf(params[i]);
+            } else if (AppConstant.MINUS_CONCAT.equals(tag)) {
+                for (int i = 1; i < params.length; i++) {
+                    sbf.append("-" + params[i]);
+                    result -= Double.valueOf(params[i]);
+                }
+            } else if (AppConstant.MULTIPLY_CONCAT.equals(tag)) {
+                for (int i = 1; i < params.length; i++) {
+                    sbf.append("*" + params[i]);
+                    result *= Double.valueOf(params[i]);
+                }
+            } else if (AppConstant.DIVIDE_CONCAT.equals(tag)) {
+                for (int i = 1; i < params.length; i++) {
+                    if (AppConstant.N_STR.equals(params[i])) {
+                        entity.setCalculations(AppConstant.NAN_STR);
+                        return;
+                    }
+                    sbf.append("/" + params[i]);
+                    result /= Double.valueOf(params[i]);
+                }
             }
-        } else if (AppConstant.Y_STR.equals(entity.getType()) || AppConstant.N_STR.equals(entity.getType())) {
+        } else {
             String content = entity.getContent().replace(" ", "");
             List<String> tagList = SplitUtils.splitNotNumber(content);
             List<String> numList = SplitUtils.splitNumber(content);
             result = Double.valueOf(numList.get(0));
             int size = tagList.size();
             Calc calc = new Calc();
+            boolean flag = false;
             for (int i = 0; i < size; i++) {
                 calc.setType(tagList.get(i));
                 calc.setNums(result + AppConstant.SPLIT_CONCAT + numList.get(i + 1));
                 this.compute2(calc);
-                result = Double.valueOf(calc.getCalculations());
+                if (AppConstant.NAN_STR.equals(calc.getCalculations())) {
+                    flag = true;
+                    break;
+                } else {
+                    result = Double.valueOf(calc.getCalculations());
+                }
             }
             entity.setContent(content);
-            entity.setCalculations(String.format("%.3f", result));
-//            System.out.println("content = " + content);
-//            System.out.println("result = " + result);
+//            entity.setContent(content + " =");
+            if (!flag) {
+//                entity.setCalculations("" + result);
+                entity.setCalculations(String.format("%.3f", result));
+            }
             return;
         }
 //        redisTemplate.opsForValue().set(CacheConstants.CACHE_KEY_CALC_CONTENT + sbf.toString(), "" + result);

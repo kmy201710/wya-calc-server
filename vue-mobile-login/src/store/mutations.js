@@ -6,9 +6,11 @@ export default {
    * 退出登录
    */
   logout(state){
-    state.user = null;
+    Object.keys(state.user).forEach(key => (state.user[key] = ''));
     localStorage.removeItem('id');
     localStorage.removeItem('name');
+    localStorage.removeItem('shop');
+    localStorage.removeItem('role');
 
     state.token = null;
     // 清除token

@@ -40,7 +40,7 @@ public class CommService implements ApplicationRunner {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                calcApi.getNext("size=3&tag=0");
+                calcApi.getNext("size=2&tag=0");
                 System.out.println("Task is processing.");// 此处可以插入自己bai想运行的代码片段
             }
         };
@@ -55,11 +55,12 @@ public class CommService implements ApplicationRunner {
             @Override
             public void run() {
                 calcApi.generator("size=3&tag=1");
+                calcApi.generator("size=4&tag=2");
                 System.out.println("Task is processing.");// 此处可以插入自己bai想运行的代码片段
             }
         };
         Timer timer = new Timer();
-        timer.schedule(task, 30000);//此处启动要运行的程序。
+        timer.schedule(task, 10000);//此处启动要运行的程序。
     }
 
     public static <T extends BaseModel> void initCreate(T t) {

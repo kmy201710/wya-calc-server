@@ -91,7 +91,7 @@ public class RandomUtils {
      */
     public static List<String> randomList(int size, int n) {
         SetOperations<String, String> setOpt = redisTemplate.opsForSet();
-        String redisKey = CacheConstant.CACHE_KEY_CALC_RANDOM_NUMS + AppConstant.MINUS_CONCAT + n;
+        String redisKey = CacheConstant.CACHE_KEY_CALC_RANDOM_NUMS + n;
         List<String> result = setOpt.randomMembers(redisKey, size);
         if (EmptyUtils.isEmpty(result)) {
             RedisMock.initCreate(redisTemplate, n);
@@ -111,7 +111,7 @@ public class RandomUtils {
      */
     public static Set<String> randomSet(int size, int n) {
         SetOperations<String, String> setOpt = redisTemplate.opsForSet();
-        String redisKey = CacheConstant.CACHE_KEY_CALC_RANDOM_NUMS + AppConstant.MINUS_CONCAT + n;
+        String redisKey = CacheConstant.CACHE_KEY_CALC_RANDOM_NUMS + n;
         Set<String> result = setOpt.distinctRandomMembers(redisKey, size);
         if (EmptyUtils.isEmpty(result)) {
             RedisMock.initCreate(redisTemplate, n);

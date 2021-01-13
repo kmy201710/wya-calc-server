@@ -2,6 +2,7 @@ package com.wya.web.mock;
 
 import com.wya.web.constant.AppConstant;
 import com.wya.web.constant.CacheConstant;
+import com.wya.web.utils.DateUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.ArrayList;
@@ -40,10 +41,14 @@ public class ManagerMock {
         resultMap.put("swiperList", swiperList);
 
         List<Map> managerList = new ArrayList<>();
-        Long size = redisTemplate.opsForSet().size(CacheConstant.CACHE_KEY_CALC_TYPE_OBJ + AppConstant.N_STR);
-        size += redisTemplate.opsForSet().size(CacheConstant.CACHE_KEY_CALC_TYPE_OBJ + AppConstant.Y_STR);
-        Map<String, String> params = handleData("/image/home/wya.jpg", "数学表达式(" + size + ")", "/info/calc");
-        Map<String, String> params1 = handleData("/image/home/user.png", "动态信息(敬请期待)", "/info/userCalc");
+        String redisKey = CacheConstant.CACHE_KEY_CALC_TYPE_OBJ;
+        Long size = redisTemplate.opsForSet().size(redisKey + 0);
+        size += redisTemplate.opsForSet().size(redisKey + 1);
+        size += redisTemplate.opsForSet().size(redisKey + 2);
+        size += redisTemplate.opsForSet().size(redisKey + 3);
+        Map<String, String> params = handleData("/image/home/wya.jpg", "用户信息(" + size + ")", "/info/calc");
+        Map<String, String> params1 = handleData("/image/home/wya.jpg", "数学表达式(" + size + ")", "/info/calc");
+//        Map<String, String> params1 = handleData("/image/home/user.png", "动态信息(敬请期待)", "/info/userCalc");
         Map<String, String> params2 = handleData("/image/home/user.png", "活动信息(敬请期待)", "/info/user");
         Map<String, String> params3 = handleData("/image/home/user.png", "任务信息(敬请期待)", "/info/user");
         Map<String, String> params4 = handleData("/image/home/user.png", "商品信息(敬请期待)", "/info/user");

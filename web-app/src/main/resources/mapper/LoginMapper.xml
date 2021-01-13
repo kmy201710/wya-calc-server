@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.wya.web.mapper.CalcAdvMapper" >
-	<resultMap type="com.wya.web.model.CalcAdv" id="BaseResultMap" >
+<mapper namespace="com.wya.web.mapper.LoginMapper" >
+	<resultMap type="com.wya.web.model.Login" id="BaseResultMap" >
 	<result column="id" property="id" jdbcType="BIGINT" />
 	<result column="shop_id" property="shopId" jdbcType="BIGINT" />
-	<result column="user_id" property="userId" jdbcType="BIGINT" />
-	<result column="user_name" property="userName" jdbcType="VARCHAR" />
-	<result column="type" property="type" jdbcType="VARCHAR" />
-	<result column="nums" property="nums" jdbcType="VARCHAR" />
-	<result column="content" property="content" jdbcType="VARCHAR" />
-	<result column="calculations" property="calculations" jdbcType="VARCHAR" />
-	<result column="submit_text" property="submitText" jdbcType="VARCHAR" />
-	<result column="is_true" property="isTrue" jdbcType="VARCHAR" />
+	<result column="role_id" property="roleId" jdbcType="BIGINT" />
+	<result column="name" property="name" jdbcType="VARCHAR" />
+	<result column="phone_no" property="phoneNo" jdbcType="VARCHAR" />
+	<result column="password" property="password" jdbcType="VARCHAR" />
 	<result column="state" property="state" jdbcType="VARCHAR" />
 	<result column="remark" property="remark" jdbcType="VARCHAR" />
 	<result column="short_date" property="shortDate" jdbcType="VARCHAR" />
@@ -25,24 +21,28 @@
 </resultMap>
 
 	<sql id="Base_Column_List">
-        `id`, `shop_id`, `user_id`, `user_name`,
-        `type`, `content`, `nums`, `calculations`,
-     	`submit_text`, `is_true`,
+        `id`, `shop_id`, `role_id`, `name`, `phone_no`, `password`,
         `state`, `remark`, `short_date`, `create_time`, `create_user`, `update_time`, `update_user`,
         `version`, `is_enable`
     </sql>
 
-	<select id="getList" resultMap="BaseResultMap" parameterType="com.wya.web.model.CalcAdv">
+	<select id="getList" resultMap="BaseResultMap" parameterType="com.wya.web.model.Login">
 		select
 		<include refid="Base_Column_List"/>
-		from ts_calc_adv t
+		from ts_login t
 		<trim prefix="WHERE" prefixOverrides="AND | OR">
 			<if test="id != null">
 				AND t.id = #{id}
 			</if>
-			<!--            <if test="shopId != null">-->
-			<!--                AND t.shop_id = #{shopId}-->
-			<!--            </if>-->
+			<if test="name != null and name != ''">
+				AND t.name = #{name}
+			</if>
+			<if test="phoneNo != null and phoneNo != ''">
+				AND t.phone_no = #{phoneNo}
+			</if>
+			<if test="password != null and password != ''">
+				AND t.password = #{password}
+			</if>
 			AND t.`is_enable` = 1
 		</trim>
 		ORDER BY t.`id` DESC
@@ -51,24 +51,20 @@
 	<select id="get" resultMap="BaseResultMap" parameterType="java.util.HashMap">
 		SELECT
 		<include refid="Base_Column_List"/>
-		FROM ts_calc_adv t
+		FROM ts_login t
 		WHERE t.`id` = #{id}
 	</select>
 
-	<insert id="insert" parameterType="com.wya.web.model.CalcAdv" useGeneratedKeys="true" keyProperty="id">
-		insert into ts_calc_adv (<include refid="Base_Column_List"/>)
+	<insert id="insert" parameterType="com.wya.web.model.Login" useGeneratedKeys="true" keyProperty="id">
+		insert into ts_login (<include refid="Base_Column_List"/>)
 		VALUES
 		(
 		#{id},
 		#{shopId},
-		#{userId},
-		#{userName},
-		#{type},
-		#{content},
-		#{nums},
-		#{calculations},
-		#{submitText},
-		#{isTrue},
+		#{roleId},
+		#{name},
+		#{phoneNo},
+		#{password},
 		#{state},
 		#{remark},
 		#{shortDate},
@@ -80,5 +76,17 @@
 		#{isEnable}
 		)
 	</insert>
+
+	<update id="update" parameterType="com.wya.web.model.Login" >
+        UPDATE ts_login
+        SET
+            phone_no = #{phoneNo},
+            password = #{password},
+            update_time = #{updateTime},
+            update_user = #{updateUser},
+            version = #{version},
+            is_enable = #{isEnable}
+        WHERE id = #{id}
+    </update>
 
 </mapper>

@@ -18,12 +18,12 @@ const preUrl = 'http://8.136.103.138:80'
 
 
 function commonFun() {
-    console.log("公共方法")
+  console.log("公共方法")
 }
 
 function resTrue(res) {
+  console.log(res);
   if(res.code === '10000'){
-    console.log(res);
     return 1;
   }
   return 0;

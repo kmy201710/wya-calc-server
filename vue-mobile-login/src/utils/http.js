@@ -11,7 +11,7 @@ import {preUrl} from "./commons";
  * TIME_OUT, BASE_URL
  */
 export const timeout = 5000;    // 请求超时时间
-export const baseURL = preUrl + '/app';   // 引入全局url
+export const baseURL = preUrl;   // 引入全局url
 // export const baseURL = 'http://localhost:7080';   // 引入全局url
 
 Vue.prototype.$http = axios; //挂载axios插件的方法
