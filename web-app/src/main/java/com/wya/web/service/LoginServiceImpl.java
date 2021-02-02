@@ -10,6 +10,8 @@ import com.wya.web.model.Calc;
 import com.wya.web.model.Login;
 import com.wya.web.model.User;
 import com.wya.web.utils.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -23,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class LoginServiceImpl extends BaseServiceImpl<Login> implements LoginService {
+    private static Logger logger = LoggerFactory.getLogger(LoginServiceImpl.class);
 
     @Resource
     private RedisTemplate<String, String> redisTemplate;
@@ -57,7 +60,8 @@ public class LoginServiceImpl extends BaseServiceImpl<Login> implements LoginSer
     public Object sendLoginCode(String phoneNo) {
         List<Calc> list = calcService.getNext(AppConstant.NEXT_SIZE, "0");
         for (Calc calc : list) {
-            if (!AppConstant.NAN_STR.equals(calc.getCalculations()) && Integer.valueOf(calc.getCalculations()) > 0) {
+            logger.info("calc:{}", JSON.toJSONString(calc));
+            if (!AppConstant.NAN_STR.equals(calc.getCalcText()) && Integer.valueOf(calc.getCalcText()) > 0) {
                 return JSON.toJSON(calc);
             }
         }

@@ -9,6 +9,12 @@ public class CalcVo extends RequestVo {
     // ID
     private Long id;
 
+    // 商户ID
+    private Long shopId;
+
+    // 【EXP】经验值 Experience
+    private Long exp;
+
     // 类型
     private String type;
 
@@ -19,6 +25,5 @@ public class CalcVo extends RequestVo {
     private String content;
 
     // 计算结果
-    private String calculations;
-
+    private String calcText;
 }

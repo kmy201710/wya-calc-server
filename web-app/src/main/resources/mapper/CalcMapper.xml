@@ -2,28 +2,27 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.wya.web.mapper.CalcMapper">
     <resultMap type="com.wya.web.model.Calc" id="BaseResultMap">
-        <result column="id" property="id" jdbcType="BIGINT" />
-        <result column="shop_id" property="shopId" jdbcType="BIGINT" />
-        <result column="type" property="type" jdbcType="VARCHAR" />
-        <result column="content" property="content" jdbcType="VARCHAR" />
-        <result column="nums" property="nums" jdbcType="VARCHAR" />
-        <result column="calculations" property="calculations" jdbcType="VARCHAR" />
-        <result column="state" property="state" jdbcType="VARCHAR" />
-        <result column="remark" property="remark" jdbcType="VARCHAR" />
-        <result column="short_date" property="shortDate" jdbcType="VARCHAR" />
-        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-        <result column="create_user" property="createUser" jdbcType="VARCHAR" />
-        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
-        <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="BIGINT"/>
+        <result column="shop_id" property="shopId" jdbcType="BIGINT"/>
+        <result column="exp" property="exp" jdbcType="BIGINT"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="nums" property="nums" jdbcType="VARCHAR"/>
+        <result column="calc_text" property="calcText" jdbcType="VARCHAR"/>
+        <result column="state" property="state" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="short_date" property="shortDate" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="create_user" property="createUser" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="update_user" property="updateUser" jdbcType="VARCHAR"/>
         <result column="version" property="version" jdbcType="INTEGER"/>
         <result column="is_enable" property="isEnable" jdbcType="BIT"/>
 
     </resultMap>
 
     <sql id="Base_Column_List">
-        `id`, `shop_id`, `type`, `content`, `nums`, `calculations`,
-        `state`, `remark`, `short_date`, `create_time`, `create_user`, `update_time`, `update_user`,
-        `version`, `is_enable`
+	    `id`, `shop_id`, `exp`, `type`, `nums`, `content`, `calc_text`, `state`, `remark`, `short_date`, `create_time`, `create_user`, `update_time`, `update_user`, `version`, `is_enable`
     </sql>
 
     <select id="getList" resultMap="BaseResultMap" parameterType="com.wya.web.model.Calc">
@@ -34,9 +33,9 @@
             <if test="id != null">
                 AND t.id = #{id}
             </if>
-<!--            <if test="shopId != null">-->
-<!--                AND t.shop_id = #{shopId}-->
-<!--            </if>-->
+            <!--            <if test="shopId != null">-->
+            <!--                AND t.shop_id = #{shopId}-->
+            <!--            </if>-->
             AND t.`is_enable` = 1
         </trim>
         ORDER BY t.`id` DESC
@@ -55,10 +54,11 @@
         (
         #{id},
         #{shopId},
+        #{exp},
         #{type},
-        #{content},
         #{nums},
-        #{calculations},
+        #{content},
+        #{calcText},
         #{state},
         #{remark},
         #{shortDate},
@@ -78,10 +78,11 @@
             (
             #{item.id},
             #{item.shopId},
+            #{item.exp},
             #{item.type},
-            #{item.content},
             #{item.nums},
-            #{item.calculations},
+            #{item.content},
+            #{item.calcText},
             #{item.state},
             #{item.remark},
             #{item.shortDate},

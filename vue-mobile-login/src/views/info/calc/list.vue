@@ -2,7 +2,7 @@
 // https://www.cnblogs.com/s313139232/p/9182363.html
 // http://doc.huangsw.com/vue-easytable/app.html#/table/basic
 <template>
-  <div style="padding: 10px 5px" >
+  <div style="padding: 10px" >
     <div class="table_btn">
       <el-row>
         <el-button type="warning"
@@ -16,16 +16,28 @@
                    ref="addOrUpdate">
                    <!-- @refreshDataList="getData" -->
     </add-or-update>
-    <v-table is-horizontal-resize column-width-drag style="width:100%" 
+    
+  <!-- <v-table
+    is-horizontal-resize is-vertical-resize :vertical-resize-offset='60'
+    style="width:100%;margin-bottom: 10px;"
+    :columns="columns" :table-data="tableData"
+    row-hover-color="#eee" row-click-color="#edf7ff"
+    title-bg-color="#F8E7E4" even-bg-color="#f2f2f2"
+    :multiple-sort="false" :sort-always="true" @sort-change="sortChange" ></v-table> -->
+
+    <v-table is-horizontal-resize column-width-drag 
+      style="width:100%; margin-bottom: 10px;" 
       row-hover-color="#eee" 
       row-click-color="#edf7ff"
+      title-bg-color="#F8E7E4"
       even-bg-color="#f2f2f2" 
       :table-data="tableData" 
       :columns="columns" 
       :paging-index="(page.pageIndex-1)*page.pageSize" 
       :show-vertical-border="false"
       :is-loading="loading"  
-      :sort-change="sortChange"
+      :sort-always="true"
+      @sort-change="sortChange"
       :select-change="getSelectObj"
       :row-click="rowClick"
       :column-cell-class-name="columnCellClass"
@@ -109,40 +121,30 @@
               },{
                   label: '困难',
                   value: '2',
-              },{
-                  label: '自定义',
-                  value: '3',
               }],
             isResize: true,
             isFrozen: true
           },
+          // {
+          //   field: 'exp', title: '经验值', width: 60, titleAlign: 'center', columnAlign: 'center',
+          //   formatter: function (rowData,rowIndex,pagingIndex,field) {
+          //       return `<span class='cell-edit-color'>${rowData[field]}</span>`;
+          //     },
+          //   isResize: true,
+          //   orderBy: 'desc'
+          // },
           {
-            field: 'content', title: '表达式', width: 160, titleAlign: 'center', columnAlign: 'center',
-            formatter: function (rowData,rowIndex,pagingIndex,field) {
-                return `<span class='cell-edit-color'>${rowData[field]}</span>`;
-              },
-            // filterMultiple: true,
-            // filters: [{
-            //     label: '孙伟',
-            //     value: '孙伟',
-            // }, {
-            //     label: '吴伟',
-            //     value: '吴伟',
-            // }, {
-            //     label: '周伟',
-            //     value: '周伟',
-            // }],
+            field: 'content', title: '表达式', width: 180, titleAlign: 'center', columnAlign: 'center',
+            // formatter: function (rowData,rowIndex,pagingIndex,field) {
+            //     return `<span class='cell-edit-color'>${rowData[field]}</span>`;
+            //   },
             isResize: true
           },
-          // {
-          //   field: 'info', title: '结果', width: 60, titleAlign: 'center', columnAlign: 'center',
-          //   formatter: function (rowData,rowIndex,pagingIndex,field) {
-          //       return `<span class='cell-edit-color'></span>`;
-          //     },
-          //   isEdit:true,
-          //   isResize: true,
-          //   // orderBy: 'desc'
-          // },
+          {
+            field: 'calcText', title: '计算', width: 60, titleAlign: 'center', columnAlign: 'center',
+            isResize: true,
+            orderBy: 'desc'
+          },
           {
             field: 'custome-adv', title: '操作',width: 110, titleAlign: 'center',columnAlign:'center',componentName:'table-operation',isResize:true
           // {
@@ -216,7 +218,7 @@
           if (params.type === 'delete'){ // do delete operation
               this.$delete(this.tableData,params.index);
           }else if (params.type === 'edit'){ // do edit operation
-              alert(`行号：${params.index + 1} 提示：${params.rowData['calculations']}`)
+              alert(`行号：${params.index + 1} 提示：${params.rowData['calcText']}`)
           }
       },
       // 新增
@@ -244,27 +246,25 @@
       },
       rowClick(rowIndex,rowData){
           console.log('rowClick');
-          alert(`行号：${rowIndex + 1}  提示：${rowData.calculations}`)
+          alert(`行号：${rowIndex + 1}  提示：${rowData.calcText}`)
       },
       // 数据筛选
       filterMethod(filters){
-          if (filters.type === null) {
-            this.loadData()
-            return
-          }
-          let tableData = this.tableData;
-          console.log('filters')
-          console.log(filters)
-          console.log(tableData)
-          // filter gender
-          if (Array.isArray(filters.type)){
-              tableData = tableData.filter(item => item.type === filters.type[0])
-          }
-          // filter name
-          if (Array.isArray(filters.name)){
-              tableData = tableData.filter(item => filters.name.indexOf(item.name) > -1);
-          }
-          this.tableData = tableData;
+        console.log('filterMethod')
+        if (filters.type === null) {
+          this.loadData()
+          return
+        }
+        let tableData = this.tableData;
+        // filter gender
+        // if (Array.isArray(filters.gender)){
+        //     tableData = tableData.filter(item => item.gender === filters.gender[0])
+        // }
+        // filter type
+        if (Array.isArray(filters.type)){
+            tableData = tableData.filter(item => filters.type.indexOf(item.type) > -1);
+        }
+        this.tableData = tableData;
       },
       // update(rowData, index){
       //     // 参数根据业务场景随意构造
@@ -290,30 +290,31 @@
       },
       
       sortChange(params){
+        console.log('sortChange')
         // 数值排序
-        if (params.calculations.length > 0) {
+        if (params.calcText.length > 0) {
             this.tableData.sort(function (a, b) {
-                if (params.calculations === 'desc') {
-                    return b.calculations - a.calculations
-                } else if (params.calculations === 'asc') {
-                    return a.calculations - b.calculations
+                if (params.calcText === 'desc') {
+                    return b.calcText - a.calcText
+                } else if (params.calcText === 'asc') {
+                    return a.calcText - b.calcText
                 } else {
                     return 0
                 }
             })
         }
         // 日期排序
-        if (params.end_date.length > 0) {
-            this.tableData.sort(function (a, b) {
-                if (params.end_date === 'desc') {
-                  return Date.parse(b.end_date) - Date.parse(a.end_date)
-                } else if (params.end_date === 'asc') {
-                  return Date.parse(a.end_date) - Date.parse(b.end_date)
-                } else {
-                  return 0
-                }
-            })
-        }
+        // if (params.end_date.length > 0) {
+        //     this.tableData.sort(function (a, b) {
+        //         if (params.end_date === 'desc') {
+        //           return Date.parse(b.end_date) - Date.parse(a.end_date)
+        //         } else if (params.end_date === 'asc') {
+        //           return Date.parse(a.end_date) - Date.parse(b.end_date)
+        //         } else {
+        //           return 0
+        //         }
+        //     })
+        // }
 
         // console.log(column);
  

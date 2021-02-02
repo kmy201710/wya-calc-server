@@ -67,8 +67,8 @@
           {name: '小学生', index: 10},
           {name: '中学生', index: 20},
           {name: '大学生', index: 30},
-          {name: '自由职业', index: 40},
-          {name: '固定职业', index: 50},
+          {name: '家长', index: 30},
+          {name: '其他', index: 40},
         ]
       }
     },

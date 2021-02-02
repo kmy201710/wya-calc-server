@@ -29,7 +29,8 @@ public class AppConstant {
 
     public final static Integer NEXT_SIZE = 3;
 
-    public final static long SHOP_DEFAULT = 1L;
+    public final static long CALC_EXP_DEFAULT = 1L;
+    public final static long TASK_EXP_DEFAULT = 10L;
 
     public static ShopEntity shopEntity = SpringUtils.getBean("shopEntity");
 

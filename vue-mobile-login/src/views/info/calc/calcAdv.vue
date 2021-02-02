@@ -1,5 +1,6 @@
+// https://blog.csdn.net/weixin_48337566/article/details/112005686
 <template>
-  <div style="padding: 10px 5px" >
+  <div style="padding: 10px" >
     <div class="table_btn">
       <el-row>
         <el-button type="warning"
@@ -21,28 +22,20 @@
           ref="myscroller">
         <div v-for="(item,index) in list" :key="index">
           <!-- {{index+1}} -->
-          <van-row gutter="20">
-            <van-col span="6">
-              <van-row gutter="15">
-                <van-col >{{ item.id }}</van-col>
-                <van-divider></van-divider>
-              </van-row>
-              <van-row type="flex" justify="space-between">
-                <van-col>{{ item.type === '0' ? '简单' :
-                  item.type === '1' ? '中等' :
-                  item.type === '2' ? '困难' : '自定义'}}</van-col>
-                <van-divider></van-divider>
-              </van-row>
+          <van-row gutter="15">
+            <van-col span="8">
+              <van-image width="100%" :src="preUrl + '/image/home/wya.jpg'"></van-image>
+              <!-- <van-divider></van-divider> -->
             </van-col>
-            <van-col span="18">
-              <van-row gutter="15">
-                <van-col span="6">{{ item.userName }}</van-col>
-                <van-col span="10">90 / 100</van-col>
-                <van-col span="8">{{ item.shortDate }}</van-col>
+            <van-col span="16">
+              <van-row>
+                <van-col span="12">{{ item.userName }}</van-col>
+                <van-col span="12">{{ item.shortDate }}</van-col>
                 <van-divider></van-divider>
               </van-row>
+              <!-- <van-divider></van-divider> -->
               <van-row type="flex" justify="space-between">
-                <van-col span="16">{{ item.content }} {{ item.calculations }}</van-col>
+                <van-col span="16">{{ item.content }} = {{ item.calcText }}</van-col>
                 <van-col span="8">
                   <a href="#">+1</a>&nbsp;
                   <!-- <a href="" @click.stop.prevent="">购买2</a> -->
@@ -63,7 +56,7 @@
 
   // 导入共用组件
   import { Toast } from 'vant'
-  import { resTrue } from "@/utils/commons"
+  import { preUrl, resTrue } from "@/utils/commons"
   // import { list } from "@/api/user"
   import { list, listCalcAdv } from "@/api/calc"
 
@@ -89,6 +82,7 @@
     data() {
       return {
         shop: this.$store.state.shop,
+        preUrl: preUrl,
         dialogFormVisible: false,
         isShow: true,
         isBottom: false,

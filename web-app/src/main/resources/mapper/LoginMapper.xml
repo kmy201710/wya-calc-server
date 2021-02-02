@@ -21,9 +21,7 @@
 </resultMap>
 
 	<sql id="Base_Column_List">
-        `id`, `shop_id`, `role_id`, `name`, `phone_no`, `password`,
-        `state`, `remark`, `short_date`, `create_time`, `create_user`, `update_time`, `update_user`,
-        `version`, `is_enable`
+        `id`, `shop_id`, `role_id`, `name`, `phone_no`, `password`, `state`, `remark`, `short_date`, `create_time`, `create_user`, `update_time`, `update_user`, `version`, `is_enable`
     </sql>
 
 	<select id="getList" resultMap="BaseResultMap" parameterType="com.wya.web.model.Login">

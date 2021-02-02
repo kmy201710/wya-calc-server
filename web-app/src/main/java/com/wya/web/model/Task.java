@@ -4,7 +4,7 @@ import com.wya.pub.BaseModel;
 import lombok.Data;
 
 @Data
-public class Calc extends BaseModel {
+public class Task extends BaseModel {
 
 	// ID
 	private Long id;
@@ -15,15 +15,27 @@ public class Calc extends BaseModel {
 	// 【EXP】经验值 Experience
 	private Long exp;
 
+	// 名称
+	private String name;
+
 	// 类型
 	private String type;
-
-	// 数组
-	private String nums;
 
 	// 表达式
 	private String content;
 
-	// 计算结果
-	private String calcText;
+	// 最大数
+	private Long maxNum;
+
+	// 最小数
+	private Long minNum;
+
+	// 开始时间
+	private String startDate;
+
+	// 结束时间
+	private String endDate;
+
+	// 任务结果
+	private String taskText;
 }

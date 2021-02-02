@@ -50,7 +50,7 @@
         //   this.sms = oldVal;
         // }
         // if(isCode(newVal)){
-        if(newVal === this.calculations){
+        if(newVal === this.calcText){
           this.login();
           this.type = 'danger';
           this.loginDisabled = false
@@ -75,7 +75,7 @@
         type: 'default',
         errMsg: '',
         tips: '',
-        calculations: '',
+        calcText: '',
       }
     },
     methods: {
@@ -104,10 +104,10 @@
         };
         sendLoginCode(params)
           .then(res => {
-            this.$message({ type: "info", message: res.data.calculations });
+            this.$message({ type: "info", message: res.data.calcText });
             if (resTrue(res) === 1) {
               this.tips = res.data.content
-              this.calculations = res.data.calculations
+              this.calcText = res.data.calcText
               this.disabled = 'disabled';
               this.timer()
             }

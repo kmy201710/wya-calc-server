@@ -25,9 +25,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        `id`, `shop_id`, `role_id`, `name`, `phone_no`, `password`, `avatar`, `sex`, `birthday`, `is_verified`,
-        `state`, `remark`, `short_date`, `create_time`, `create_user`, `update_time`, `update_user`,
-        `version`, `is_enable`
+        `id`, `shop_id`, `role_id`, `name`, `phone_no`, `password`, `avatar`, `sex`, `birthday`, `is_verified`, `state`, `remark`, `short_date`, `create_time`, `create_user`, `update_time`, `update_user`, `version`, `is_enable`
     </sql>
 
     <select id="getList" resultMap="BaseResultMap" parameterType="com.wya.web.model.User">
@@ -89,34 +87,6 @@
         #{version},
         #{isEnable}
         )
-    </insert>
-
-    <insert id="insertList" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
-        insert into tu_user (<include refid="Base_Column_List"/>)
-        VALUES
-        <foreach collection="list" item="item" separator=",">
-            (
-            #{item.id},
-            #{item.shopId},
-            #{item.roleId},
-            #{item.name},
-            #{item.phoneNo},
-            #{item.password},
-            #{item.avatar},
-            #{item.sex},
-            #{item.birthday},
-            #{item.isVerified},
-            #{item.state},
-            #{item.remark},
-            #{item.shortDate},
-            #{item.createTime},
-            #{item.createUser},
-            #{item.updateTime},
-            #{item.updateUser},
-            #{item.version},
-            #{item.isEnable}
-            )
-        </foreach>
     </insert>
 
     <update id="update" parameterType="com.wya.web.model.User">

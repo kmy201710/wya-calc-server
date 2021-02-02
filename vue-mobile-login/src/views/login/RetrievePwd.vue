@@ -53,7 +53,7 @@
         //   this.code = oldVal;
         // }
         // if(isCode(newVal) && this.pwd.length > 0){
-        if(newVal === this.calculations){
+        if(newVal === this.calcText){
           this.type = 'danger';
           this.loginDisabled = false
         }else{
@@ -83,7 +83,7 @@
         // 发送验证码按钮文字
         text: '',
         tips: '',
-        calculations: '',
+        calcText: '',
       }
     },
     methods: {
@@ -110,13 +110,13 @@
           // if(res.code === 200){
           //   Toast("验证码发送成功")
           // }
-          this.$message({ type: "info", message: res.data.calculations });
+          this.$message({ type: "info", message: res.data.calcText });
           if (resTrue(res) === 1) {
             if (res.data.version === -1) {
               Toast("用户不存在")
             } else {
               this.tips = res.data.content
-              this.calculations = res.data.calculations
+              this.calcText = res.data.calcText
               Toast("验证码发送成功")
             }
           } else {

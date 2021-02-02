@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wya.web.mapper.UserExtMapper">
+    <resultMap type="com.wya.web.model.UserExt" id="BaseResultMap">
+        <result column="id" property="id" jdbcType="BIGINT"/>
+        <result column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="exp" property="exp" jdbcType="BIGINT"/>
+        <result column="lv" property="lv" jdbcType="BIGINT"/>
+        <result column="hp" property="hp" jdbcType="BIGINT"/>
+        <result column="mp" property="mp" jdbcType="BIGINT"/>
+        <result column="state" property="state" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="short_date" property="shortDate" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="create_user" property="createUser" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="update_user" property="updateUser" jdbcType="VARCHAR"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
+        <result column="is_enable" property="isEnable" jdbcType="BIT"/>
+
+    </resultMap>
+    <sql id="Base_Column_List">
+		`id`, `user_id`, `user_name`, `exp`, `lv`, `hp`, `mp`, `state`, `remark`, `short_date`, `create_time`, `create_user`, `update_time`, `update_user`, `version`, `is_enable`
+	</sql>
+</mapper>

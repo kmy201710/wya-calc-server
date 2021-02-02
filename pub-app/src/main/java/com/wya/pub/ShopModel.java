@@ -2,6 +2,8 @@ package com.wya.pub;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class ShopModel {
 
@@ -14,12 +16,12 @@ public class ShopModel {
     // 角色ID
     private Long roleId;
 
-    // 手机号
-    private String phoneNo;
-
     // 地址
     private String address;
 
     // 请求Url
     private String hostUrl;
+
+    // 等级经验
+    private List<Long> exps;
 }

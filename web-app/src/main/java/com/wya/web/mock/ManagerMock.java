@@ -46,7 +46,7 @@ public class ManagerMock {
         size += redisTemplate.opsForSet().size(redisKey + 1);
         size += redisTemplate.opsForSet().size(redisKey + 2);
         size += redisTemplate.opsForSet().size(redisKey + 3);
-        Map<String, String> params = handleData("/image/home/wya.jpg", "用户信息(" + size + ")", "/info/calc");
+        Map<String, String> params = handleData("/image/home/wya.jpg", "用户信息(**)", "/info/user");
         Map<String, String> params1 = handleData("/image/home/wya.jpg", "数学表达式(" + size + ")", "/info/calc");
 //        Map<String, String> params1 = handleData("/image/home/user.png", "动态信息(敬请期待)", "/info/userCalc");
         Map<String, String> params2 = handleData("/image/home/user.png", "活动信息(敬请期待)", "/info/user");

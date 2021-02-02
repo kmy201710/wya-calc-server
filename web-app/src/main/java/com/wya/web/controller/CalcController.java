@@ -84,7 +84,7 @@ public class CalcController extends BaseController<Calc> {
         } else {
             calcService.compute2(calc);
         }
-        logger.info("本次计算结果:{}, 计算表达式:{}", calc.getCalculations(), calc.getContent());
+        logger.info("本次计算结果:{}, 计算表达式:{}", calc.getCalcText(), calc.getContent());
         return this.returnSuccess(calc);
     }
 }

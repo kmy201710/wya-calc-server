@@ -50,7 +50,7 @@ public class CalcServiceImpl extends BaseServiceImpl<Calc> implements CalcServic
 
     @Override
     public List<Calc> getNext(int size, String tag) {
-        logger.info("===>> getNext size:{}, cacheSize:{}", size, cacheSize);
+        logger.info("===>> getNext size:{}, tag:{}, cacheSize:{}", size, tag, cacheSize);
         List<Calc> result = new ArrayList<>();
         Long incr = IncrementUtils.getIncr(CacheConstant.CACHE_KEY_CALC_INCREMENT, size);
         String redisKey = CacheConstant.CACHE_KEY_CALC_TYPE_OBJ + tag;
@@ -118,8 +118,10 @@ public class CalcServiceImpl extends BaseServiceImpl<Calc> implements CalcServic
             calc.setContent(sbf.toString());
             if (AppConstant.N_STR.equals(tag)) {
                 this.compute(calc);
+                calc.setExp(AppConstant.CALC_EXP_DEFAULT);
             } else {
                 this.compute2(calc);
+                calc.setExp(Long.valueOf(tag) + Long.valueOf(num));
             }
             calc.setContent(sbf.toString());
 //            calc.setContent(sbf.toString() + " =");
@@ -166,7 +168,7 @@ public class CalcServiceImpl extends BaseServiceImpl<Calc> implements CalcServic
             } else if (AppConstant.DIVIDE_CONCAT.equals(tag)) {
                 for (int i = 1; i < params.length; i++) {
                     if (AppConstant.N_STR.equals(params[i])) {
-                        entity.setCalculations(AppConstant.NAN_STR);
+                        entity.setCalcText(AppConstant.NAN_STR);
                         return;
                     }
                     sbf.append("/" + params[i]);
@@ -185,25 +187,25 @@ public class CalcServiceImpl extends BaseServiceImpl<Calc> implements CalcServic
                 calc.setType(tagList.get(i));
                 calc.setNums(result + AppConstant.SPLIT_CONCAT + numList.get(i + 1));
                 this.compute(calc);
-                if (AppConstant.NAN_STR.equals(calc.getCalculations())) {
+                if (AppConstant.NAN_STR.equals(calc.getCalcText())) {
                     flag = true;
                     break;
                 } else {
-                    result = Integer.valueOf(calc.getCalculations());
+                    result = Integer.valueOf(calc.getCalcText());
                 }
             }
             entity.setContent(content);
 //            entity.setContent(content + " =");
             if (!flag) {
 //                entity.setCalculations("" + result);
-                entity.setCalculations(String.format("%d", result));
+                entity.setCalcText(String.format("%d", result));
             }
             return;
         }
 //        redisTemplate.opsForValue().set(CacheConstants.CACHE_KEY_CALC_CONTENT + sbf.toString(), "" + result);
 //        redisTemplate.expire(CacheConstants.CACHE_KEY_CALC_CONTENT + sbf.toString(), CacheConstants.CACHE_TIME_DEFAULT, TimeUnit.SECONDS);
         entity.setContent(sbf.toString());
-        entity.setCalculations("" + result);
+        entity.setCalcText("" + result);
     }
 
     @Override
@@ -238,7 +240,7 @@ public class CalcServiceImpl extends BaseServiceImpl<Calc> implements CalcServic
             } else if (AppConstant.DIVIDE_CONCAT.equals(tag)) {
                 for (int i = 1; i < params.length; i++) {
                     if (AppConstant.N_STR.equals(params[i])) {
-                        entity.setCalculations(AppConstant.NAN_STR);
+                        entity.setCalcText(AppConstant.NAN_STR);
                         return;
                     }
                     sbf.append("/" + params[i]);
@@ -257,25 +259,25 @@ public class CalcServiceImpl extends BaseServiceImpl<Calc> implements CalcServic
                 calc.setType(tagList.get(i));
                 calc.setNums(result + AppConstant.SPLIT_CONCAT + numList.get(i + 1));
                 this.compute2(calc);
-                if (AppConstant.NAN_STR.equals(calc.getCalculations())) {
+                if (AppConstant.NAN_STR.equals(calc.getCalcText())) {
                     flag = true;
                     break;
                 } else {
-                    result = Double.valueOf(calc.getCalculations());
+                    result = Double.valueOf(calc.getCalcText());
                 }
             }
             entity.setContent(content);
 //            entity.setContent(content + " =");
             if (!flag) {
 //                entity.setCalculations("" + result);
-                entity.setCalculations(String.format("%.3f", result));
+                entity.setCalcText(String.format("%.3f", result));
             }
             return;
         }
 //        redisTemplate.opsForValue().set(CacheConstants.CACHE_KEY_CALC_CONTENT + sbf.toString(), "" + result);
 //        redisTemplate.expire(CacheConstants.CACHE_KEY_CALC_CONTENT + sbf.toString(), CacheConstants.CACHE_TIME_DEFAULT, TimeUnit.SECONDS);
         entity.setContent(sbf.toString());
-        entity.setCalculations(String.format("%.3f", result));
+        entity.setCalcText(String.format("%.3f", result));
     }
 
     @Override

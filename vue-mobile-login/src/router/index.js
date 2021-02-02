@@ -41,7 +41,7 @@ const routes = [
     meta: {
       title: "动态信息",
       requireAuth: true,
-      showTab: false
+      showTab: true
     }
   },
   {

@@ -15,11 +15,11 @@ public class CalcAdvVo extends RequestVo {
 	// 用户ID
 	private Long userId;
 
-	// 
+	// 用户名称
 	private String userName;
 
-	// 计算ID
-	private Long calculationId;
+	// 【EXP】经验值 Experience
+	private Long exp;
 
 	// 类型
 	private String type;
@@ -31,11 +31,8 @@ public class CalcAdvVo extends RequestVo {
 	private String content;
 
 	// 计算结果
-	private String calculations;
+	private String calcText;
 
-	// 提交
-	private String submitText;
-
-	// 验证
+	// 判断
 	private String isTrue;
 }

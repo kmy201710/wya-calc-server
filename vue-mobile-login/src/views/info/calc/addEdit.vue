@@ -30,12 +30,9 @@
       <el-form-item label="表达式：">
         <el-input v-model="form.content"></el-input>
       </el-form-item>
-      <el-form-item label="提示：">
-        <el-input v-model="form.calculations"></el-input>
-        <!-- <el-input v-model="form.submitText"></el-input> -->
-      </el-form-item>
+      <!-- 提示： -->
       <el-form-item label="结果：">
-        <el-input v-model="form.submitText"></el-input>
+        <el-input v-model="form.calcText"></el-input>
       </el-form-item>
     </el-form>
 
@@ -66,11 +63,11 @@
           userId: '',
           userName: '',
           id: '',
+          exp: '',
           type: '',
           nums: '',
           content: '',
-          calculations: '',
-          submitText: '',
+          calcText: '',
           // id: '',
           // taskcode: '',
           // taskname: '',
@@ -106,6 +103,9 @@
           .then(res => {
             if (resTrue(res) === 1) {
               this.form = res.data[0]
+              setTimeout(() => {
+                this.form.calcText = null
+              }, 500);
             }
           })
           .catch(err => {
@@ -125,25 +125,28 @@
       },
       submitForm () {
         console.log(this.form)
-        if (this.form.type !== '3') {
-          if (this.form.calculations === this.form.submitText) {
-            this.$message({ type: "success", message: "回答正确" });
-          } else {
-            this.$message({ type: "error", message: "回答错误" });
-          }
-          this.save(this.form)
-        } else {
-          compute(this.form)
-            .then(res => {
-              if (resTrue(res) === 1) {
+        compute(this.form)
+          .then(res => {
+            if (resTrue(res) === 1) {
+              console.log(res.data.calcText)
+              if (this.form.type !== '3') {
+                if (this.form.calcText === null) {
+                  this.$message({ type: "info", message: "请输入结果" });
+                  return
+                } else if (this.form.calcText === res.data.calcText) {
+                  this.$message({ type: "success", message: "回答正确" });
+                } else {
+                  this.$message({ type: "error", message: "回答错误" });
+                }
+              } else {
                 this.form = res.data
-                this.save(this.form)
               }
-            })
-            .catch(err => {
-              console.log(err);
-            })
-        }
+              this.save(this.form)
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          })
       },
       save (params) {
         let calcType = params.type
@@ -162,7 +165,7 @@
             .catch(err => {
               console.log(err);
             })
-        }, 1500);
+        }, 500);
 
       }
     }
