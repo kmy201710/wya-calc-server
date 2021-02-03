@@ -1,7 +1,6 @@
 package com.wya.web.test;
 
-import com.wya.web.utils.SplitUtils;
-import com.wya.web.utils.RandomUtils;
+import com.calc.web.utils.SplitUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;

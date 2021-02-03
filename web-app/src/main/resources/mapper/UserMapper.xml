@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.wya.web.mapper.UserMapper">
-    <resultMap type="com.wya.web.model.User" id="BaseResultMap">
+<mapper namespace="com.calc.web.mapper.UserMapper">
+    <resultMap type="com.calc.web.model.User" id="BaseResultMap">
         <result column="id" property="id" jdbcType="BIGINT"/>
         <result column="shop_id" property="shopId" jdbcType="BIGINT"/>
         <result column="role_id" property="roleId" jdbcType="BIGINT"/>
@@ -28,7 +28,7 @@
         `id`, `shop_id`, `role_id`, `name`, `phone_no`, `password`, `avatar`, `sex`, `birthday`, `is_verified`, `state`, `remark`, `short_date`, `create_time`, `create_user`, `update_time`, `update_user`, `version`, `is_enable`
     </sql>
 
-    <select id="getList" resultMap="BaseResultMap" parameterType="com.wya.web.model.User">
+    <select id="getList" resultMap="BaseResultMap" parameterType="com.calc.web.model.User">
         select
         <include refid="Base_Column_List"/>
         from tu_user t
@@ -63,7 +63,7 @@
         WHERE t.`id` = #{id}
     </select>
 
-    <insert id="insert" parameterType="com.wya.web.model.User" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="com.calc.web.model.User" useGeneratedKeys="true" keyProperty="id">
         insert into tu_user (<include refid="Base_Column_List"/>)
         VALUES
         (
@@ -89,7 +89,7 @@
         )
     </insert>
 
-    <update id="update" parameterType="com.wya.web.model.User">
+    <update id="update" parameterType="com.calc.web.model.User">
         UPDATE tu_user
         SET
             phone_no = #{phoneNo},
